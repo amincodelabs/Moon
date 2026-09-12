@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Heart,
   ShoppingBag,
@@ -112,6 +112,7 @@ export default function StoreApp() {
   );
   const [toast, setToast] = useState<{ en: string; fa: string } | null>(null);
   const [chat, setChat] = useState(false);
+  const categoryMenuRef = useRef<HTMLDetailsElement>(null);
   const tr = (en: string, fa: string) =>
     preferences.language === "fa" ? fa : en;
   const navigate = (next: string) => {
@@ -124,6 +125,20 @@ export default function StoreApp() {
     const pop = () => setPath(location.pathname + location.search);
     addEventListener("popstate", pop);
     return () => removeEventListener("popstate", pop);
+  }, []);
+  useEffect(() => {
+    const dismiss = (event: PointerEvent) => {
+      const menu = categoryMenuRef.current;
+      if (
+        menu?.open &&
+        event.target instanceof Node &&
+        !menu.contains(event.target)
+      ) {
+        menu.open = false;
+      }
+    };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
   }, []);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -203,12 +218,18 @@ export default function StoreApp() {
                 />
               </form>
             </div>
-            <details className="shop-category-menu">
+            <details ref={categoryMenuRef} className="shop-category-menu">
               <summary>
                 {tr("Shop categories", "دسته‌بندی‌های فروشگاه")}{" "}
                 <ChevronDown size={15} />
               </summary>
-              <div className="shop-category-dropdown">
+              <div
+                className="shop-category-dropdown"
+                onClick={() => {
+                  if (categoryMenuRef.current)
+                    categoryMenuRef.current.open = false;
+                }}
+              >
                 <div className="shop-category-group">
                   <strong>{tr("Telescopes", "تلسکوپ‌ها")}</strong>
                   <ShopLink to="/store/category/telescopes">
