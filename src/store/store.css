@@ -269,15 +269,38 @@
   align-items: center;
   margin: 0;
   width: auto;
-  gap: 5px;
+  gap: 0;
+  position: relative;
+}
+.shop-app .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  background: transparent;
+  position: relative;
+  z-index: 2;
+}
+.shop-app .theme-toggle:hover {
+  color: var(--gold-text);
+  border-color: var(--gold);
 }
 .shop-app .theme-control select {
-  width: 32px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   margin: 0;
-  font-size: 11px;
-  padding: 8px 0;
+  font-size: 0;
+  padding: 0;
   opacity: 0;
   cursor: pointer;
+  z-index: 1;
 }
 .shop-app .theme-control svg {
   position: static;

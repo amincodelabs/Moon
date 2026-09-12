@@ -2,7 +2,6 @@ import {
   Globe2,
   Menu,
   Moon,
-  Monitor,
   Search,
   Sparkles,
   Sun,
@@ -38,6 +37,8 @@ export function Preferences({
   theme: Theme;
   setTheme: (t: Theme) => void;
 }) {
+  const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = theme === "dark" || (theme === "system" && systemDark);
   return (
     <div className="preferences">
       <button
@@ -49,25 +50,33 @@ export function Preferences({
         <Globe2 size={17} />
         <span>{language === "fa" ? "FA" : "EN"}</span>
       </button>
-      <label className="theme-control">
-        {theme === "light" ? (
-          <Sun size={17} aria-hidden="true" />
-        ) : theme === "dark" ? (
-          <Moon size={17} aria-hidden="true" />
-        ) : (
-          <Monitor size={17} aria-hidden="true" />
-        )}
-        <span className="sr-only">{t.theme}</span>
+      <div className="theme-control">
+        <button
+          type="button"
+          className="theme-toggle"
+          aria-label={`${t.theme}: ${isDark ? t.dark : t.light}`}
+          onClick={() => {
+            setTheme(isDark ? "light" : "dark");
+          }}
+        >
+          {isDark ? (
+            <Moon size={17} aria-hidden="true" />
+          ) : (
+            <Sun size={17} aria-hidden="true" />
+          )}
+          <span className="sr-only">{t.theme}</span>
+        </button>
         <select
           aria-label={t.theme}
           value={theme}
+          tabIndex={-1}
           onChange={(e) => setTheme(e.target.value as Theme)}
         >
           <option value="dark">{t.dark}</option>
           <option value="light">{t.light}</option>
           <option value="system">{t.system}</option>
         </select>
-      </label>
+      </div>
     </div>
   );
 }

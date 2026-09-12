@@ -21,7 +21,7 @@ export function usePreferences() {
     readPreference("avastar-language", "fa") === "en" ? "en" : "fa",
   );
   const [theme, setTheme] = useState<Theme>(() => {
-    const v = readPreference("avastar-theme", "dark");
+    const v = readPreference("avastar-theme", "system");
     return v === "light" || v === "system" ? v : "dark";
   });
   useLayoutEffect(() => {
