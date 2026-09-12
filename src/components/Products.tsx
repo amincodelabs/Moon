@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useImageSwipe } from "../useImageSwipe";
 import { products } from "../data";
 import type { Copy, Language } from "../locales";
 import {
@@ -21,11 +22,17 @@ function ProductCard({
   go: Navigate;
 }) {
   const [index, setIndex] = useState(0);
+  const swipe = useImageSwipe(language, (direction) =>
+    setIndex(
+      (current) =>
+        (current + direction + product.images.length) % product.images.length,
+    ),
+  );
   const format = (n: number) =>
     new Intl.NumberFormat(language === "fa" ? "fa-IR" : "en-US").format(n);
   return (
     <article className="product">
-      <div className="product-visual">
+      <div className="product-visual" {...swipe}>
         <Photo
           name={product.images[index]}
           alt={`${t[product.alt]}${index ? ` — ${t.productView}` : ""}`}
