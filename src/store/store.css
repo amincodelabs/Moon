@@ -138,6 +138,11 @@
   direction: ltr;
   order: 1;
 }
+.shop-brand img {
+  display: block;
+  width: 145px;
+  height: auto;
+}
 .shop-brand small {
   display: block;
   font-size: 9px;
@@ -1725,6 +1730,9 @@
   }
   .shop-brand svg {
     width: 22px;
+  }
+  .shop-brand img {
+    width: 112px;
   }
   .shop-brand small {
     font-size: 8px;

@@ -192,8 +192,7 @@ export default function StoreApp() {
               className="shop-brand"
               aria-label={tr("AvaStar home", "صفحه اصلی آوااستار")}
             >
-              <Sparkles size={30} strokeWidth={1.2} />
-              <span>AVASTAR</span>
+              <img src="/avastar-logo.svg" alt="AvaStar" />
             </a>
             <div className="shop-header-search">
               <Search size={17} aria-hidden="true" />
