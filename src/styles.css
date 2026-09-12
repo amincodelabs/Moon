@@ -395,6 +395,16 @@ a:hover .direction-arrow {
   color: var(--gold-text);
   transform: rotate(-13deg);
 }
+.brand > img {
+  display: block;
+  width: 145px;
+  height: auto;
+}
+@media (max-width: 800px) {
+  .brand > img {
+    width: 112px;
+  }
+}
 .brand strong {
   display: block;
   font-size: 27px;
@@ -436,6 +446,79 @@ a:hover .direction-arrow {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+.preferences .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  background: transparent;
+}
+.preferences .theme-toggle:hover {
+  color: var(--gold-text);
+  border-color: var(--gold);
+}
+.preferences .theme-control {
+  position: relative;
+  width: auto;
+  gap: 2px;
+}
+.preferences .theme-control .shop-select-menu {
+  position: relative;
+  align-self: center;
+}
+.preferences .theme-control .shop-sort-control {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.preferences .theme-control .shop-select-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+  width: max-content;
+  min-width: 140px;
+  padding: 5px;
+  z-index: 60;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px #0002;
+}
+.preferences .theme-control .shop-select-options button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 6px;
+  text-align: start;
+  font-size: 12px;
+  background: transparent;
+  color: var(--text);
+}
+.preferences .theme-control .shop-select-options button:hover,
+.preferences .theme-control .shop-select-options button:focus-visible {
+  background: var(--surface2);
+  outline: 2px solid var(--gold-text);
+  outline-offset: -2px;
+}
+.preferences .theme-control .shop-select-options button[aria-selected="true"] {
+  color: var(--gold-text);
 }
 .theme-control select {
   max-width: 64px;

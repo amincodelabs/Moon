@@ -1,12 +1,5 @@
-import {
-  Globe2,
-  Menu,
-  Moon,
-  Search,
-  Sparkles,
-  Sun,
-  UserRound,
-} from "lucide-react";
+import { Globe2, Menu, Moon, Search, Sun, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { Copy, Language } from "../locales";
 import type { Theme } from "../preferences";
 import { destinations } from "../data";
@@ -14,13 +7,7 @@ import { DestinationLink, type Navigate } from "./Primitives";
 export function Brand({ t }: { t: Copy }) {
   return (
     <a href="/" className="brand" aria-label={t.brand}>
-      <span className="brand-symbol" aria-hidden="true">
-        <Sparkles size={31} strokeWidth={1.25} />
-      </span>
-      <span>
-        <strong>{t.brand}</strong>
-        <small>AVASTAR</small>
-      </span>
+      <img src="/avastar-logo.svg" alt={t.brand} width="200" height="84" />
     </a>
   );
 }
@@ -37,7 +24,15 @@ export function Preferences({
   theme: Theme;
   setTheme: (t: Theme) => void;
 }) {
-  const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const [systemDark, setSystemDark] = useState(
+    () => matchMedia("(prefers-color-scheme: dark)").matches,
+  );
+  useEffect(() => {
+    const media = matchMedia("(prefers-color-scheme: dark)");
+    const update = () => setSystemDark(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   const isDark = theme === "dark" || (theme === "system" && systemDark);
   return (
     <div className="preferences">
@@ -54,6 +49,8 @@ export function Preferences({
         <button
           type="button"
           className="theme-toggle"
+          role="switch"
+          aria-checked={isDark}
           aria-label={`${t.theme}: ${isDark ? t.dark : t.light}`}
           onClick={() => {
             setTheme(isDark ? "light" : "dark");
@@ -66,16 +63,6 @@ export function Preferences({
           )}
           <span className="sr-only">{t.theme}</span>
         </button>
-        <select
-          aria-label={t.theme}
-          value={theme}
-          tabIndex={-1}
-          onChange={(e) => setTheme(e.target.value as Theme)}
-        >
-          <option value="dark">{t.dark}</option>
-          <option value="light">{t.light}</option>
-          <option value="system">{t.system}</option>
-        </select>
       </div>
     </div>
   );

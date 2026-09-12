@@ -96,9 +96,8 @@ test("catalog search, filters, sorting, collections, gallery and persistent wish
   await page.getByLabel("Search products", { exact: true }).fill("Atlas");
   await expect(fullList.locator(".shop-product")).toHaveCount(2);
   await page.getByLabel("Search products", { exact: true }).fill("");
-  await page
-    .getByRole("combobox", { name: "Brand", exact: true })
-    .selectOption("Orbit");
+  await page.getByRole("button", { name: "Brand", exact: true }).click();
+  await page.getByRole("option", { name: "Orbit", exact: true }).click();
   await page.getByLabel("In stock only", { exact: true }).check();
   await expect(fullList.locator(".shop-product")).toHaveCount(2);
   await page.getByLabel("Maximum price (IRR)", { exact: true }).fill("5000000");
@@ -107,23 +106,28 @@ test("catalog search, filters, sorting, collections, gallery and persistent wish
   await page.getByLabel("Telescopes", { exact: true }).check();
   await expect(fullList.locator(".shop-product")).toHaveCount(2);
   await page.getByRole("button", { name: "Reset filters" }).click();
-  await page.getByLabel("Sort products").selectOption("low");
+  await page.getByRole("button", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: "Price: low to high" }).click();
   await expect(fullList.locator(".shop-product").first()).toContainText(
     "Orbit Redlight Torch",
   );
-  await page.getByLabel("Sort products").selectOption("high");
+  await page.getByRole("button", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: "Price: high to low" }).click();
   await expect(fullList.locator(".shop-product").first()).toContainText(
     "Zenith 90",
   );
-  await page.getByLabel("Sort products").selectOption("new");
+  await page.getByRole("button", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: "Newest arrivals" }).click();
   await expect(fullList.locator(".shop-product").first()).toContainText(
     "Orbit Redlight Torch",
   );
-  await page.getByLabel("Sort products").selectOption("best");
+  await page.getByRole("button", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: "Best sellers" }).click();
   await expect(fullList.locator(".shop-product").first()).toContainText(
     "Atlas 10×50",
   );
-  await page.getByLabel("Sort products").selectOption("selected");
+  await page.getByRole("button", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: "Recommended" }).click();
   const tile = fullList.locator(".shop-product").first();
   const image = await tile.locator("img").getAttribute("src");
   await tile.getByRole("button", { name: /Next image/ }).click();

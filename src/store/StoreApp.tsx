@@ -413,7 +413,12 @@ export default function StoreApp() {
         <footer className="shop-footer">
           <div>
             <a href="/" className="shop-brand">
-              <Sparkles size={25} /> AVASTAR
+              <img
+                src="/avastar-logo.svg"
+                alt="AvaStar"
+                width="200"
+                height="84"
+              />
             </a>
             <p>
               {tr("For a lifetime of looking up.", "برای یک عمر تماشای آسمان.")}

@@ -10,6 +10,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { useShop } from "./context";
+import { SelectMenu } from "./SelectMenu";
 import { bannerSlides, catalog, categories, productCollections } from "./model";
 import {
   ProductTile,
@@ -307,15 +308,20 @@ export function Catalog() {
                 </label>
               ))}
             </fieldset>
-            <label>
-              {tr("Brand", "برند")}
-              <select value={brand} onChange={(e) => setBrand(e.target.value)}>
-                <option value="">{tr("All brands", "همه برندها")}</option>
-                {["AvaStar", "Atlas", "Orbit"].map((b) => (
-                  <option key={b}>{b}</option>
-                ))}
-              </select>
-            </label>
+            <div className="shop-brand-filter">
+              <p>{tr("Brand", "برند")}</p>
+              <SelectMenu
+                label={tr("Brand", "برند")}
+                value={brand}
+                onChange={setBrand}
+                options={[
+                  ["", tr("All brands", "همه برندها")],
+                  ["AvaStar", "AvaStar"],
+                  ["Atlas", "Atlas"],
+                  ["Orbit", "Orbit"],
+                ]}
+              />
+            </div>
             <label className="shop-price-filter">
               <span className="shop-filter-label">
                 {tr("Price range", "محدوده قیمت")}
@@ -401,29 +407,19 @@ export function Catalog() {
           </aside>
           <div>
             <div className="shop-catalog-tools">
-              <label
-                className="shop-sort-control"
-                title={tr("Sort products", "مرتب‌سازی محصولات")}
-              >
-                <ArrowDownUp size={16} aria-hidden="true" />
-                <select
-                  aria-label={tr("Sort products", "مرتب‌سازی محصولات")}
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                >
-                  {[
-                    ["selected", tr("Recommended", "پیشنهادی")],
-                    ["low", tr("Price: low to high", "قیمت: کم به زیاد")],
-                    ["high", tr("Price: high to low", "قیمت: زیاد به کم")],
-                    ["new", tr("Newest arrivals", "جدیدترین‌ها")],
-                    ["best", tr("Best sellers", "پرفروش‌ترین‌ها")],
-                  ].map(([v, label]) => (
-                    <option key={v} value={v}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SelectMenu
+                label={tr("Sort products", "مرتب‌سازی محصولات")}
+                value={sort}
+                onChange={setSort}
+                icon={<ArrowDownUp size={16} aria-hidden="true" />}
+                options={[
+                  ["selected", tr("Recommended", "پیشنهادی")],
+                  ["low", tr("Price: low to high", "قیمت: کم به زیاد")],
+                  ["high", tr("Price: high to low", "قیمت: زیاد به کم")],
+                  ["new", tr("Newest arrivals", "جدیدترین‌ها")],
+                  ["best", tr("Best sellers", "پرفروش‌ترین‌ها")],
+                ]}
+              />
             </div>
             <p className="shop-results" role="status">
               {items.length} {tr("instruments to explore", "تجهیز برای کاوش")}
