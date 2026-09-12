@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080e1b" />
+    <title>آوااستار | آغاز یک کشف بی‌انتها</title>
+    <meta
+      name="description"
+      content="با آوااستار آسمان را کشف کنید؛ تجهیزات نجومی، آموزش، سفرهای رصدی و روایت‌هایی از جهان بالای سرمان."
+    />
+    <meta property="og:title" content="آوااستار | آغاز یک کشف بی‌انتها" />
+    <meta
+      property="og:description"
+      content="یک آسمان، هزار مسیر برای کشف. فروشگاه، آموزش، تور و مجله نجوم آوااستار."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/hero-1600.webp" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero-1600.webp"
+      imagesrcset="/images/hero-800.webp 800w, /images/hero-1600.webp 1600w"
+      imagesizes="100vw"
+    />
+    <script>
+      try {
+        const l = localStorage.getItem("avastar-language");
+        if (l === "en") {
+          document.documentElement.lang = "en";
+          document.documentElement.dir = "ltr";
+        }
+        const t = localStorage.getItem("avastar-theme") || "dark";
+        document.documentElement.dataset.theme =
+          t === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : t === "light"
+              ? "light"
+              : "dark";
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
