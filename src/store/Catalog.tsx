@@ -71,6 +71,21 @@ export function Catalog() {
             setBannerPaused(false);
         }}
       >
+        {bannerSlides[banner].link.startsWith("/store") ? (
+          <ShopLink
+            to={bannerSlides[banner].link}
+            className="shop-banner-link"
+            aria-label={text(bannerSlides[banner].action)}
+          >
+            {null}
+          </ShopLink>
+        ) : (
+          <a
+            href={bannerSlides[banner].link}
+            className="shop-banner-link"
+            aria-label={text(bannerSlides[banner].action)}
+          />
+        )}
         <img
           key={bannerSlides[banner].image}
           src={`/images/${bannerSlides[banner].image}-800.webp`}
@@ -78,23 +93,15 @@ export function Catalog() {
           width="800"
           height="600"
         />
-        <div className="shop-hero-copy">
+        <div
+          className="shop-hero-copy"
+          key={`copy-${bannerSlides[banner].image}`}
+        >
           <p className="shop-overline">
             AVASTAR / {text(bannerSlides[banner].eyebrow)}
           </p>
           <h1>{text(bannerSlides[banner].title)}</h1>
           <p>{text(bannerSlides[banner].body)}</p>
-          {bannerSlides[banner].link.startsWith("/store") ? (
-            <ShopLink to={bannerSlides[banner].link} className="shop-button">
-              {text(bannerSlides[banner].action)}
-              <ArrowUpRight size={18} />
-            </ShopLink>
-          ) : (
-            <a href={bannerSlides[banner].link} className="shop-button">
-              {text(bannerSlides[banner].action)}
-              <ArrowUpRight size={18} />
-            </a>
-          )}
         </div>
         <div
           className="shop-hero-controls"

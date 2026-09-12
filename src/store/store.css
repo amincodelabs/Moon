@@ -229,6 +229,43 @@
   width: 100%;
   object-fit: cover;
   z-index: -2;
+  animation: shop-banner-fade 0.65s ease both;
+}
+.shop-banner-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+.shop-hero-copy {
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+  animation: shop-banner-copy-fade 0.65s ease both;
+}
+.shop-hero-controls,
+.shop-hero-caption {
+  z-index: 2;
+}
+@keyframes shop-banner-fade {
+  from {
+    opacity: 0;
+    transform: scale(1.025);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes shop-banner-copy-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .shop-editorial-hero::after {
   content: "";
@@ -266,6 +303,7 @@
   font-size: 10px;
   letter-spacing: 0.13em;
   color: #e0e5ed;
+  pointer-events: none;
 }
 .shop-hero-controls {
   position: absolute;
@@ -1643,5 +1681,9 @@
   .shop-button:hover,
   .shop-icon:hover {
     transform: none;
+  }
+  .shop-editorial-hero > img,
+  .shop-hero-copy {
+    animation: none;
   }
 }
