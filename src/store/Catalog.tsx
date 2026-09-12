@@ -28,6 +28,7 @@ export function Catalog() {
   const categorySlug = routeSegments[2];
   const [category, setCategory] = useState("0");
   const [brand, setBrand] = useState("");
+  const [minPrice, setMinPrice] = useState(0);
   const [price, setPrice] = useState(300000000);
   const [available, setAvailable] = useState(false);
   const [sort, setSort] = useState("selected");
@@ -59,6 +60,7 @@ export function Catalog() {
       (category === "0" || p.category === category) &&
       (!brand || p.brand === brand) &&
       p.price <= price &&
+      p.price >= minPrice &&
       (!available || p.stock > 0) &&
       `${text(p.name)} ${p.brand} ${text(p.description)}`
         .toLowerCase()
@@ -70,7 +72,7 @@ export function Catalog() {
   if (sort === "best") items = [...items].sort((a, b) => b.sold - a.sold);
   useEffect(
     () => setPage(1),
-    [searchQuery, category, brand, price, available, sort],
+    [searchQuery, category, brand, minPrice, price, available, sort],
   );
   const pageSize = 6;
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
@@ -326,18 +328,39 @@ export function Catalog() {
             </label>
             <label className="shop-price-filter">
               <span className="shop-filter-label">
-                {tr("Maximum price", "حداکثر قیمت")}
-                <output>{money(price)}</output>
+                {tr("Price range", "محدوده قیمت")}
+                <output>
+                  {money(minPrice)} – {money(price)}
+                </output>
               </span>
-              <input
-                type="range"
-                min="0"
-                max="300000000"
-                step="1000000"
-                aria-label={tr("Maximum price (IRR)", "حداکثر قیمت (ریال)")}
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-              />
+              <div className="shop-price-slider">
+                <input
+                  type="range"
+                  min="0"
+                  max="300000000"
+                  step="1000000"
+                  aria-label={tr("Minimum price (IRR)", "حداقل قیمت (ریال)")}
+                  value={minPrice}
+                  onChange={(e) =>
+                    setMinPrice(
+                      Math.min(Number(e.target.value), price - 1000000),
+                    )
+                  }
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="300000000"
+                  step="1000000"
+                  aria-label={tr("Maximum price (IRR)", "حداکثر قیمت (ریال)")}
+                  value={price}
+                  onChange={(e) =>
+                    setPrice(
+                      Math.max(Number(e.target.value), minPrice + 1000000),
+                    )
+                  }
+                />
+              </div>
               <span className="shop-price-bounds">
                 <span>{money(0)}</span>
                 <span>{money(300000000)}</span>
@@ -347,8 +370,13 @@ export function Catalog() {
                   <button
                     type="button"
                     key={value}
-                    className={price === value ? "active" : ""}
-                    onClick={() => setPrice(value)}
+                    className={
+                      minPrice === 0 && price === value ? "active" : ""
+                    }
+                    onClick={() => {
+                      setMinPrice(0);
+                      setPrice(value);
+                    }}
                   >
                     {value === 300000000
                       ? tr("Any", "همه")
@@ -371,6 +399,7 @@ export function Catalog() {
                 setSearchQuery("");
                 setCategory("0");
                 setBrand("");
+                setMinPrice(0);
                 setPrice(300000000);
                 setAvailable(false);
                 setSort("selected");
