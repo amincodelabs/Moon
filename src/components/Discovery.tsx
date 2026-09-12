@@ -12,7 +12,9 @@ const icons = [Telescope, BookOpen, Compass, Orbit];
 export function Hero({ t, go }: { t: Copy; go: Navigate }) {
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <Photo name="hero" alt={t.heroAlt} hero className="hero-image" />
+      <div className="hero-depth">
+        <Photo name="hero" alt={t.heroAlt} hero className="hero-image" />
+      </div>
       <div className="hero-shade" />
       <div className="hero-orbit" aria-hidden="true" />
       <svg

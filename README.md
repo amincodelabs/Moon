@@ -43,3 +43,17 @@ This phase implements only the homepage. Store, courses, tour bookings, magazine
 ## Verification
 
 See `IMPLEMENTATION_REPORT.md` for completed checks and browser inspection results. Screenshots are in `artifacts/`.
+
+## Scroll storytelling and touch
+
+The existing CSS/Intersection Observer stack now uses native scroll timelines for hero depth, tour-image movement, and an editorial crop crossfade. On spacious desktop screens, the existing magazine image briefly stays in place as its copy passes beside it; mobile, short screens, and reduced-motion mode use the normal document flow. No wheel interception or scroll snapping is used.
+
+Language and theme controls crossfade the current viewport with the View Transition API when supported. Reduced motion bypasses snapshots and decorative scroll effects. Unsupported browsers retain the original section entrances/static imagery, with a passive, frame-coalesced progress-bar fallback. Horizontal touch swipes change product images in the active reading direction; vertical pan and pinch zoom remain native, and visible previous/next buttons remain available.
+
+To repeat the optional local scroll performance comparison against a production build:
+
+```sh
+PERF_PROBE=local TEST_PRODUCTION=1 npm test -- tests/performance.spec.ts
+```
+
+This Chromium probe uses 4× CPU throttling and records frame timing and scroll layout shifts in `artifacts/`. It is a local regression indicator, not a substitute for field Core Web Vitals.
