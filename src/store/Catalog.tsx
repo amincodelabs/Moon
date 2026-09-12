@@ -292,8 +292,8 @@ export function Catalog() {
           </div>
           <p>
             {tr(
-              "Browse every product with filters and pages.",
-              "همه محصولات را با فیلتر و صفحه‌بندی ببینید.",
+              "Filter by category, price, brand, or availability, then sort your matches.",
+              "با دسته‌بندی، قیمت، برند یا موجودی فیلتر کنید و نتایج را مرتب کنید.",
             )}
           </p>
         </div>
