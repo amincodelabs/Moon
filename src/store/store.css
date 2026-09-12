@@ -586,6 +586,31 @@
   border: 1px solid var(--line);
   font-size: 11px;
 }
+.shop-cart-stepper {
+  width: 100%;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 44px minmax(30px, 1fr) 44px;
+  align-items: center;
+  border: 1px solid var(--gold);
+  border-radius: 7px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.shop-cart-stepper button {
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: var(--gold-text);
+}
+.shop-cart-stepper button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--gold) 18%, transparent);
+}
+.shop-cart-stepper output {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 650;
+}
 .shop-product .shop-button:hover {
   background: var(--gold);
   color: #18202c;

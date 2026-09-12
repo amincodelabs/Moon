@@ -109,6 +109,30 @@ test("catalog search, filters, sorting, collections, gallery and persistent wish
   await expect(page.getByText("Keep a little inspiration")).toBeVisible();
 });
 
+test("add-to-basket controls become a plus/minus quantity stepper", async ({
+  page,
+}) => {
+  await page.goto("/store");
+  const tile = page.locator(".shop-product").first();
+  await tile.getByRole("button", { name: "Add to cart", exact: true }).click();
+  await expect(tile.locator(".shop-cart-stepper output")).toHaveText("1");
+  await tile.getByRole("button", { name: /Increase quantity/ }).click();
+  await expect(tile.locator(".shop-cart-stepper output")).toHaveText("2");
+  await tile.getByRole("button", { name: /Decrease quantity/ }).click();
+  await expect(tile.locator(".shop-cart-stepper output")).toHaveText("1");
+  await page.goto("/store/product/refractor");
+  await expect(
+    page.locator(".shop-detail-actions .shop-cart-stepper output"),
+  ).toHaveText("1");
+  await page
+    .locator(".shop-detail-actions")
+    .getByRole("button", { name: /Increase quantity/ })
+    .click();
+  await expect(
+    page.locator(".shop-detail-actions .shop-cart-stepper output"),
+  ).toHaveText("2");
+});
+
 test("variants, cart quantities, vouchers and persistence through authentication", async ({
   page,
 }) => {

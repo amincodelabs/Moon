@@ -2,6 +2,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
+  Minus,
   Plus,
   Star,
   ShoppingBag,
@@ -121,13 +122,45 @@ export function AddButton({
   product: Product;
   variant?: number;
 }) {
-  const { state, add, tr, notify } = useShop();
+  const { state, add, quantity, tr, notify, text } = useShop();
+  const line = state.cart.find(
+    (item) => item.productId === product.id && item.variant === variant,
+  );
+  const count = line?.quantity ?? 0;
   const limit =
     state.cart
       .filter((l) => l.productId === product.id)
       .reduce((n, l) => n + l.quantity, 0) >= product.stock;
+  if (count > 0) {
+    return (
+      <div
+        className="shop-cart-stepper"
+        aria-label={`${tr("Quantity in basket", "تعداد در سبد")}: ${text(product.name)}`}
+      >
+        <button
+          type="button"
+          aria-label={`${tr("Decrease quantity", "کاهش تعداد")}: ${text(product.name)}`}
+          onClick={() => quantity(product.id, variant, count - 1)}
+        >
+          <Minus size={16} />
+        </button>
+        <output aria-live="polite" aria-label={tr("Quantity", "تعداد")}>
+          {count}
+        </output>
+        <button
+          type="button"
+          disabled={limit}
+          aria-label={`${tr("Increase quantity", "افزایش تعداد")}: ${text(product.name)}`}
+          onClick={() => quantity(product.id, variant, count + 1)}
+        >
+          <Plus size={16} />
+        </button>
+      </div>
+    );
+  }
   return (
     <button
+      type="button"
       className="shop-button"
       disabled={limit}
       onClick={() => {
