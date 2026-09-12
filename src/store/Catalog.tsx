@@ -21,6 +21,10 @@ import {
 
 export function Catalog() {
   const { tr, text, navigate, path, searchQuery, setSearchQuery } = useShop();
+  const routeSegments = path.split("?")[0].split("/").filter(Boolean);
+  const resultPage = routeSegments[1];
+  const isResultsPage = resultPage === "search" || resultPage === "category";
+  const categorySlug = routeSegments[2];
   const [category, setCategory] = useState("0");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState(300000000);
@@ -31,8 +35,16 @@ export function Catalog() {
   const [page, setPage] = useState(1);
   useEffect(() => {
     const params = new URLSearchParams(path.split("?")[1]);
-    setCategory(params.get("category") ?? "0");
-  }, [path]);
+    const slugCategory =
+      categorySlug === "telescopes"
+        ? "1"
+        : categorySlug === "binoculars"
+          ? "2"
+          : categorySlug === "accessories"
+            ? "3"
+            : null;
+    setCategory(slugCategory ?? params.get("category") ?? "0");
+  }, [path, categorySlug]);
   useEffect(() => {
     if (bannerPaused) return;
     const timer = window.setInterval(() => {
@@ -63,121 +75,140 @@ export function Catalog() {
   const pagedItems = items.slice((page - 1) * pageSize, page * pageSize);
   return (
     <>
-      <section
-        className="shop-editorial-hero"
-        aria-roledescription="carousel"
-        aria-label={tr("Store highlights", "ویترین فروشگاه")}
-        aria-live="polite"
-        onMouseEnter={() => setBannerPaused(true)}
-        onMouseLeave={() => setBannerPaused(false)}
-        onFocus={() => setBannerPaused(true)}
-        onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget))
-            setBannerPaused(false);
-        }}
-      >
-        {bannerSlides[banner].link.startsWith("/store") ? (
-          <ShopLink
-            to={bannerSlides[banner].link}
-            className="shop-banner-link"
-            aria-label={text(bannerSlides[banner].action)}
-          >
-            {null}
-          </ShopLink>
-        ) : (
-          <a
-            href={bannerSlides[banner].link}
-            className="shop-banner-link"
-            aria-label={text(bannerSlides[banner].action)}
+      {!isResultsPage && (
+        <section
+          className="shop-editorial-hero"
+          aria-roledescription="carousel"
+          aria-label={tr("Store highlights", "ویترین فروشگاه")}
+          aria-live="polite"
+          onMouseEnter={() => setBannerPaused(true)}
+          onMouseLeave={() => setBannerPaused(false)}
+          onFocus={() => setBannerPaused(true)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              setBannerPaused(false);
+          }}
+        >
+          {bannerSlides[banner].link.startsWith("/store") ? (
+            <ShopLink
+              to={bannerSlides[banner].link}
+              className="shop-banner-link"
+              aria-label={text(bannerSlides[banner].action)}
+            >
+              {null}
+            </ShopLink>
+          ) : (
+            <a
+              href={bannerSlides[banner].link}
+              className="shop-banner-link"
+              aria-label={text(bannerSlides[banner].action)}
+            />
+          )}
+          <img
+            key={bannerSlides[banner].image}
+            src={`/images/${bannerSlides[banner].image}-800.webp`}
+            alt=""
+            width="800"
+            height="600"
           />
-        )}
-        <img
-          key={bannerSlides[banner].image}
-          src={`/images/${bannerSlides[banner].image}-800.webp`}
-          alt=""
-          width="800"
-          height="600"
-        />
-        <div
-          className="shop-hero-copy"
-          key={`copy-${bannerSlides[banner].image}`}
-        >
-          <p className="shop-overline">
-            AVASTAR / {text(bannerSlides[banner].eyebrow)}
-          </p>
-          <h1>{text(bannerSlides[banner].title)}</h1>
-          <p>{text(bannerSlides[banner].body)}</p>
-        </div>
-        <div
-          className="shop-hero-controls"
-          aria-label={tr("Change store banner", "تغییر بنر فروشگاه")}
-        >
-          <button
-            type="button"
-            aria-label={tr("Previous banner", "بنر قبلی")}
-            onClick={() =>
-              setBanner(
-                (banner - 1 + bannerSlides.length) % bannerSlides.length,
-              )
-            }
+          <div
+            className="shop-hero-copy"
+            key={`copy-${bannerSlides[banner].image}`}
           >
-            <ChevronLeft size={18} />
-          </button>
-          <div className="shop-hero-dots">
-            {bannerSlides.map((slide, index) => (
-              <button
-                type="button"
-                key={slide.image}
-                className={index === banner ? "active" : ""}
-                aria-label={`${tr("Banner", "بنر")} ${index + 1}`}
-                aria-current={index === banner ? "true" : undefined}
-                onClick={() => setBanner(index)}
-              />
-            ))}
+            <p className="shop-overline">
+              AVASTAR / {text(bannerSlides[banner].eyebrow)}
+            </p>
+            <h1>{text(bannerSlides[banner].title)}</h1>
+            <p>{text(bannerSlides[banner].body)}</p>
           </div>
-          <button
-            type="button"
-            aria-label={tr("Next banner", "بنر بعدی")}
-            onClick={() => setBanner((banner + 1) % bannerSlides.length)}
+          <div
+            className="shop-hero-controls"
+            aria-label={tr("Change store banner", "تغییر بنر فروشگاه")}
           >
-            <ChevronRight size={18} />
-          </button>
+            <button
+              type="button"
+              aria-label={tr("Previous banner", "بنر قبلی")}
+              onClick={() =>
+                setBanner(
+                  (banner - 1 + bannerSlides.length) % bannerSlides.length,
+                )
+              }
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <div className="shop-hero-dots">
+              {bannerSlides.map((slide, index) => (
+                <button
+                  type="button"
+                  key={slide.image}
+                  className={index === banner ? "active" : ""}
+                  aria-label={`${tr("Banner", "بنر")} ${index + 1}`}
+                  aria-current={index === banner ? "true" : undefined}
+                  onClick={() => setBanner(index)}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              aria-label={tr("Next banner", "بنر بعدی")}
+              onClick={() => setBanner((banner + 1) % bannerSlides.length)}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          <span className="shop-hero-caption">
+            {String(banner + 1).padStart(2, "0")} /{" "}
+            {tr("MADE FOR THE CURIOUS", "برای ذهن‌های کنجکاو")}
+          </span>
+        </section>
+      )}
+      {!isResultsPage && (
+        <div className="shop-benefits">
+          <span>
+            <ShieldCheck size={18} />
+            {tr("Warranty on every instrument", "ضمانت همه تجهیزات")}
+          </span>
+          <span>
+            <Truck size={18} />
+            {tr("Delivery across Iran", "ارسال به سراسر ایران")}
+          </span>
+          <span>
+            <Headphones size={18} />
+            {tr("A little guidance goes a long way", "همراه شما در هر انتخاب")}
+          </span>
         </div>
-        <span className="shop-hero-caption">
-          {String(banner + 1).padStart(2, "0")} /{" "}
-          {tr("MADE FOR THE CURIOUS", "برای ذهن‌های کنجکاو")}
-        </span>
-      </section>
-      <div className="shop-benefits">
-        <span>
-          <ShieldCheck size={18} />
-          {tr("Warranty on every instrument", "ضمانت همه تجهیزات")}
-        </span>
-        <span>
-          <Truck size={18} />
-          {tr("Delivery across Iran", "ارسال به سراسر ایران")}
-        </span>
-        <span>
-          <Headphones size={18} />
-          {tr("A little guidance goes a long way", "همراه شما در هر انتخاب")}
-        </span>
-      </div>
+      )}
       <section id="catalog" className="shop-catalog-section">
         <div className="shop-section-heading">
           <div>
             <p className="shop-overline">
-              {tr("CURATED FOR YOUR JOURNEY", "منتخب برای مسیر شما")}
+              {isResultsPage
+                ? tr("PRODUCT RESULTS", "نتایج محصولات")
+                : tr("CURATED FOR YOUR JOURNEY", "منتخب برای مسیر شما")}
             </p>
-            <h2>{tr("Explore the store", "کاوش در فروشگاه")}</h2>
+            <h2>
+              {isResultsPage
+                ? resultPage === "search"
+                  ? tr("Search results", "نتایج جست‌وجو")
+                  : text(categories[Number(category)] ?? categories[0])
+                : tr("Explore the store", "کاوش در فروشگاه")}
+            </h2>
           </div>
           <p>
-            {tr(
-              "From your first glimpse to your next horizon.",
-              "از اولین نگاه تا افق بعدی شما.",
-            )}
+            {isResultsPage
+              ? searchQuery
+                ? `${tr("Showing results for", "نتایج برای")} “${searchQuery}”`
+                : tr(
+                    "Refine your view with filters and sorting.",
+                    "با فیلترها و مرتب‌سازی، انتخاب دقیق‌تری داشته باشید.",
+                  )
+              : tr(
+                  "From your first glimpse to your next horizon.",
+                  "از اولین نگاه تا افق بعدی شما.",
+                )}
           </p>
         </div>
-        {productCollections.length > 0 && (
+        {!isResultsPage && productCollections.length > 0 && (
           <div className="shop-merchandising">
             {productCollections.map((collection) => {
               const collectionProducts = collection.productIds

@@ -189,7 +189,9 @@ export default function StoreApp() {
                 onSubmit={(event) => {
                   event.preventDefault();
                   navigate(
-                    `/store?q=${encodeURIComponent(searchQuery.trim())}`,
+                    searchQuery.trim()
+                      ? `/store/search?q=${encodeURIComponent(searchQuery.trim())}`
+                      : "/store",
                   );
                 }}
               >
@@ -209,43 +211,43 @@ export default function StoreApp() {
               <div className="shop-category-dropdown">
                 <div className="shop-category-group">
                   <strong>{tr("Telescopes", "تلسکوپ‌ها")}</strong>
-                  <ShopLink to="/store?category=1">
+                  <ShopLink to="/store/category/telescopes">
                     {tr("All telescopes", "همه تلسکوپ‌ها")}
                   </ShopLink>
-                  <ShopLink to="/store?category=1&q=Refractor">
+                  <ShopLink to="/store/category/telescopes?q=Refractor">
                     {tr("Refractor telescopes", "تلسکوپ‌های شکستی")}
                   </ShopLink>
-                  <ShopLink to="/store?category=1&q=Explorer">
+                  <ShopLink to="/store/category/telescopes?q=Explorer">
                     {tr("Explorer telescopes", "تلسکوپ‌های اکسپلورر")}
                   </ShopLink>
-                  <ShopLink to="/store?category=1&q=kit">
+                  <ShopLink to="/store/category/telescopes?q=kit">
                     {tr("Complete telescope kits", "کیت‌های کامل تلسکوپ")}
                   </ShopLink>
                 </div>
                 <div className="shop-category-group">
                   <strong>{tr("Binoculars", "دوربین‌های دوچشمی")}</strong>
-                  <ShopLink to="/store?category=2">
+                  <ShopLink to="/store/category/binoculars">
                     {tr("All binoculars", "همه دوربین‌های دوچشمی")}
                   </ShopLink>
-                  <ShopLink to="/store?category=2&q=10×50">
+                  <ShopLink to="/store/category/binoculars?q=10%C3%9750">
                     {tr("10×50 binoculars", "دوربین‌های ۱۰×۵۰")}
                   </ShopLink>
-                  <ShopLink to="/store?category=2&q=Compact">
+                  <ShopLink to="/store/category/binoculars?q=Compact">
                     {tr("Compact binoculars", "دوربین‌های کامپکت")}
                   </ShopLink>
                 </div>
                 <div className="shop-category-group">
                   <strong>{tr("Accessories", "لوازم جانبی")}</strong>
-                  <ShopLink to="/store?category=3">
+                  <ShopLink to="/store/category/accessories">
                     {tr("All accessories", "همه لوازم جانبی")}
                   </ShopLink>
-                  <ShopLink to="/store?category=3&q=Eyepiece">
+                  <ShopLink to="/store/category/accessories?q=Eyepiece">
                     {tr("Eyepieces", "چشمی‌ها")}
                   </ShopLink>
-                  <ShopLink to="/store?category=3&q=Widefield">
+                  <ShopLink to="/store/category/accessories?q=Widefield">
                     {tr("Widefield viewing", "تماشای میدان‌باز")}
                   </ShopLink>
-                  <ShopLink to="/store?category=3&q=Torch">
+                  <ShopLink to="/store/category/accessories?q=Torch">
                     {tr("Observing essentials", "ملزومات رصد")}
                   </ShopLink>
                 </div>
@@ -292,6 +294,8 @@ export default function StoreApp() {
           className={`shop-main ${page === "catalog" ? "shop-main-catalog" : ""}`}
         >
           {page === "catalog" ? (
+            <Catalog />
+          ) : page === "search" || page === "category" ? (
             <Catalog />
           ) : page === "product" ? (
             <ProductDetails key={segments[2]} id={segments[2]} />
