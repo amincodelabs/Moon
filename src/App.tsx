@@ -109,6 +109,10 @@ export default function App() {
           setAuthenticated(v);
           savePreference("avastar-demo-account", String(v));
         }}
+        language={preferences.language}
+        setLanguage={preferences.setLanguage}
+        theme={preferences.theme}
+        setTheme={preferences.setTheme}
       />
     </>
   );

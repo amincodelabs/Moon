@@ -27,18 +27,18 @@ The dev server is at http://127.0.0.1:5173. The production build is in `dist/`. 
 - `src/locales.ts`: complete Persian/English interface and sample copy.
 - `src/data.ts`: production route definitions, campaign configuration, destination metadata, sample products, and journey steps.
 - `src/preferences.ts`: persisted locale/theme, system preference listener, translated metadata. Inline initialization in `index.html` applies theme and direction before rendering to prevent incorrect-theme flash.
-- `src/components/`: focused header, hero/discovery, products, experiences/editorial, journey/footer, and overlay components.
+- `src/components/`: focused header, hero/discovery, products, experiences/editorial, journey/footer, overlay components, and the authenticated account dashboard demo.
 - `src/styles.css`: responsive design tokens, RTL/LTR, theme variants, restrained CSS motion and reduced-motion support.
 - `tests/landing.spec.ts`: browser integration tests, all four requested viewport widths, keyboard focus, preferences, account demo, image galleries, search, support, journey, and axe accessibility checks.
 - `public/images/`: optimized responsive WebP assets. See `ASSET_CREDITS.md` for provenance and licenses.
 
-The account panel offers a local demo login; no credentials or personal information are requested. Search filters destination suggestions locally and explicitly describes future unified search. Chat presents clearly unavailable AI and customer-support options without simulating a conversation. All future links retain their intended route URLs but intercept clicks to show an accessible native modal dialog. Escape closes dialogs; focus is contained and returned to the trigger.
+The account panel offers a local demo login and a responsive dashboard with overview, orders, wishlist, addresses, returns, and profile/preferences views. No credentials or personal information are requested, and the account data is UI-only demo state. Search filters destination suggestions locally and explicitly describes future unified search. Chat presents clearly unavailable AI and customer-support options without simulating a conversation. All future links retain their intended route URLs but intercept clicks to show an accessible native modal dialog. Escape closes dialogs; focus is contained and returned to the trigger.
 
 The campaign expires on December 1, 2026 and dismissal persists per campaign ID. All products, prices, stock statuses, instructors, and programs are labeled demo content. Product images include an explicit close-up carousel. Dates and prices are localized; all prices are in Iranian rials, not tomans. Preferences gracefully fall back if storage is unavailable.
 
 ## Deferred integrations
 
-This phase implements only the homepage. Store, courses, tour bookings, magazine articles, authentication, checkout, account data, live search, support/AI chat, CMS/API content, legal pages, contact channels, and social accounts remain unconnected. Their links have an explicit coming-soon treatment. Replace preview data and generated generic product visuals with approved catalog/content assets before commerce launch. Configure the public origin and an absolute Open Graph image URL when a deployment domain exists.
+This phase implements the homepage plus a professional account-panel demo. Store, courses, tour bookings, magazine articles, authentication, checkout, account persistence, live search, support/AI chat, CMS/API content, legal pages, contact channels, and social accounts remain unconnected. Their links have an explicit coming-soon treatment. Replace preview data and generated generic product visuals with approved catalog/content assets before commerce launch. Configure the public origin and an absolute Open Graph image URL when a deployment domain exists.
 
 ## Verification
 

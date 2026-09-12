@@ -39,6 +39,14 @@ Production application JavaScript is approximately 82.7 KB gzip; CSS is 6.6 KB g
 
 Only the landing page is implemented. Live authentication, product/catalog APIs, checkout, course delivery, bookings, magazine content pages, CMS, cross-platform search, AI chat/customer support, and actual contact/legal/social destinations await future integration. All relevant entry points clearly expose their preview or coming-soon state. Sample products, prices, availability, instructor, and itinerary are explicitly labeled. Before public deployment, set the absolute Open Graph asset URL for the chosen domain and configure SPA fallback routing.
 
+## Account dashboard demo
+
+Branch: `feature/user-panel-demo`, based on the merged `develop` branch.
+
+Added an authenticated, UI-only account dashboard that keeps the existing AvaStar visual language while giving the account entry point a complete product surface: overview with coins and latest order, orders, wishlist, addresses, returns, and profile settings. The panel is responsive with a desktop navigation rail and mobile tab strip, localized Persian RTL and English LTR copy, and in-place language/theme controls. Empty states explain the demo scope and provide a clear route back to the store. No real authentication, customer data, or API calls were introduced.
+
+Added `tests/user-panel.spec.ts` for dashboard rendering, tab transitions, preference changes, Escape dismissal, and keyboard focus containment. Static checks and the production build pass; the dedicated production browser suite passes all four tests.
+
 ## Motion and sticky campaign update
 
 The campaign and navigation now share a sticky masthead. A ResizeObserver tracks its actual height so anchor destinations stay clear of the header, including after campaign dismissal and on narrow screens. A scroll progress line is progressively enhanced where CSS scroll timelines are supported.
