@@ -829,21 +829,31 @@
 .shop-sort-control {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  width: auto;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
   margin: 0;
   padding: 6px 9px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 50%;
   color: var(--muted);
 }
+.shop-sort-control:hover,
+.shop-sort-control:focus-within {
+  color: var(--gold-text);
+  border-color: var(--gold);
+}
 .shop-sort-control select {
-  width: auto;
-  max-width: 145px;
-  padding: 5px 22px 5px 3px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
   border: 0;
   background: transparent;
-  font-size: 11px;
+  opacity: 0;
+  cursor: pointer;
 }
 .shop-results {
   font-size: 10px;
@@ -1967,6 +1977,9 @@
   }
   .shop-catalog-tools > select {
     max-width: none;
+  }
+  .shop-catalog-tools .shop-sort-control {
+    align-self: flex-end;
   }
   .shop-related-content {
     grid-template-columns: 1fr;

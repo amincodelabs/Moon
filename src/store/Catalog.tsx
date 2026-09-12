@@ -401,7 +401,10 @@ export function Catalog() {
           </aside>
           <div>
             <div className="shop-catalog-tools">
-              <label className="shop-sort-control">
+              <label
+                className="shop-sort-control"
+                title={tr("Sort products", "مرتب‌سازی محصولات")}
+              >
                 <ArrowDownUp size={16} aria-hidden="true" />
                 <select
                   aria-label={tr("Sort products", "مرتب‌سازی محصولات")}
