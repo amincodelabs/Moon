@@ -182,6 +182,50 @@ export const promotion = {
   expires: "2026-12-01T00:00:00Z",
   destination: "/store?collection=starters",
 };
+export const bannerSlides = [
+  {
+    image: "sky",
+    eyebrow: words("THE EQUIPMENT EDIT", "منتخب تجهیزات"),
+    title: words(
+      "Your next discovery\nstarts here.",
+      "کشف بعدی شما\nاز اینجا آغاز می‌شود.",
+    ),
+    body: words(
+      "Thoughtfully chosen equipment for a lifetime of looking up.",
+      "تجهیزاتی با انتخاب دقیق، برای یک عمر تماشای آسمان.",
+    ),
+    link: "/store?collection=selected",
+    action: words("Find your equipment", "تجهیزات خود را پیدا کنید"),
+  },
+  {
+    image: "tour",
+    eyebrow: words("THE DARK SKY SERIES", "مجموعه آسمان تاریک"),
+    title: words(
+      "Take your view\nbeyond the city.",
+      "نگاهت را\nفراتر از شهر ببر.",
+    ),
+    body: words(
+      "Portable companions for nights that deserve a wider horizon.",
+      "همراهانی سبک برای شب‌هایی که افقی گسترده‌تر می‌خواهند.",
+    ),
+    link: "/tours",
+    action: words("Discover dark skies", "کشف آسمان تاریک"),
+  },
+  {
+    image: "galaxy",
+    eyebrow: words("A LITTLE CLOSER", "یک قدم نزدیک‌تر"),
+    title: words(
+      "The right tool\nchanges everything.",
+      "ابزار درست\nهمه‌چیز را تغییر می‌دهد.",
+    ),
+    body: words(
+      "Start with a simple question and let curiosity choose the rest.",
+      "با یک پرسش ساده شروع کنید و بگذارید کنجکاوی ادامه مسیر را انتخاب کند.",
+    ),
+    link: "/education",
+    action: words("Learn before you choose", "پیش از انتخاب یاد بگیرید"),
+  },
+];
 export type Line = { productId: string; variant: number; quantity: number };
 export type Address = {
   id: string;

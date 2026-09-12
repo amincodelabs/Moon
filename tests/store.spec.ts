@@ -55,6 +55,24 @@ test("landing navigation, deep links and browser history", async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
+test("store hero cycles through linked campaign banners", async ({ page }) => {
+  await page.goto("/store");
+  const hero = page.locator(".shop-editorial-hero");
+  await expect(hero.locator("img")).toHaveAttribute("src", /sky-800/);
+  await hero.getByRole("button", { name: "Next banner" }).click();
+  await expect(hero.locator("img")).toHaveAttribute("src", /tour-800/);
+  await expect(
+    hero.getByRole("link", { name: "Discover dark skies" }),
+  ).toHaveAttribute("href", "/tours");
+  await hero.getByRole("button", { name: "Banner 3" }).click();
+  await expect(hero.locator("img")).toHaveAttribute("src", /galaxy-800/);
+  await expect(
+    hero.getByRole("link", { name: "Learn before you choose" }),
+  ).toHaveAttribute("href", "/education");
+  await hero.getByRole("button", { name: "Previous banner" }).click();
+  await expect(hero.locator("img")).toHaveAttribute("src", /tour-800/);
+});
+
 test("catalog search, filters, sorting, collections, gallery and persistent wishlist", async ({
   page,
 }) => {

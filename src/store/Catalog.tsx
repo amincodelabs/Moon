@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {
+  ChevronLeft,
+  ChevronRight,
   Search,
   SlidersHorizontal,
   ArrowUpRight,
@@ -8,7 +10,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { useShop } from "./context";
-import { catalog, categories } from "./model";
+import { bannerSlides, catalog, categories } from "./model";
 import {
   ProductTile,
   ShopLink,
@@ -27,6 +29,7 @@ export function Catalog() {
   const [price, setPrice] = useState(300000000);
   const [available, setAvailable] = useState(false);
   const [sort, setSort] = useState("selected");
+  const [banner, setBanner] = useState(0);
   const collection = params.get("collection") ?? "selected";
   let items = catalog.filter(
     (p) =>
@@ -47,31 +50,74 @@ export function Catalog() {
     items = [...items].sort((a, b) => b.sold - a.sold);
   return (
     <>
-      <section className="shop-editorial-hero">
-        <img src="/images/sky-800.webp" alt="" width="800" height="600" />
+      <section
+        className="shop-editorial-hero"
+        aria-roledescription="carousel"
+        aria-label={tr("Store highlights", "ویترین فروشگاه")}
+      >
+        <img
+          key={bannerSlides[banner].image}
+          src={`/images/${bannerSlides[banner].image}-800.webp`}
+          alt=""
+          width="800"
+          height="600"
+        />
         <div className="shop-hero-copy">
           <p className="shop-overline">
-            AVASTAR / {tr("THE EQUIPMENT EDIT", "منتخب تجهیزات")}
+            AVASTAR / {text(bannerSlides[banner].eyebrow)}
           </p>
-          <h1>
-            {tr(
-              "Your next discovery\nstarts here.",
-              "کشف بعدی شما\nاز اینجا آغاز می‌شود.",
-            )}
-          </h1>
-          <p>
-            {tr(
-              "Thoughtfully chosen equipment for a lifetime of looking up.",
-              "تجهیزاتی با انتخاب دقیق، برای یک عمر تماشای آسمان.",
-            )}
-          </p>
-          <a href="#catalog" className="shop-button">
-            {tr("Find your equipment", "تجهیزات خود را پیدا کنید")}
-            <ArrowUpRight size={18} />
-          </a>
+          <h1>{text(bannerSlides[banner].title)}</h1>
+          <p>{text(bannerSlides[banner].body)}</p>
+          {bannerSlides[banner].link.startsWith("/store") ? (
+            <ShopLink to={bannerSlides[banner].link} className="shop-button">
+              {text(bannerSlides[banner].action)}
+              <ArrowUpRight size={18} />
+            </ShopLink>
+          ) : (
+            <a href={bannerSlides[banner].link} className="shop-button">
+              {text(bannerSlides[banner].action)}
+              <ArrowUpRight size={18} />
+            </a>
+          )}
+        </div>
+        <div
+          className="shop-hero-controls"
+          aria-label={tr("Change store banner", "تغییر بنر فروشگاه")}
+        >
+          <button
+            type="button"
+            aria-label={tr("Previous banner", "بنر قبلی")}
+            onClick={() =>
+              setBanner(
+                (banner - 1 + bannerSlides.length) % bannerSlides.length,
+              )
+            }
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <div className="shop-hero-dots">
+            {bannerSlides.map((slide, index) => (
+              <button
+                type="button"
+                key={slide.image}
+                className={index === banner ? "active" : ""}
+                aria-label={`${tr("Banner", "بنر")} ${index + 1}`}
+                aria-current={index === banner ? "true" : undefined}
+                onClick={() => setBanner(index)}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label={tr("Next banner", "بنر بعدی")}
+            onClick={() => setBanner((banner + 1) % bannerSlides.length)}
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
         <span className="shop-hero-caption">
-          01 / {tr("MADE FOR THE CURIOUS", "برای ذهن‌های کنجکاو")}
+          {String(banner + 1).padStart(2, "0")} /{" "}
+          {tr("MADE FOR THE CURIOUS", "برای ذهن‌های کنجکاو")}
         </span>
       </section>
       <div className="shop-benefits">

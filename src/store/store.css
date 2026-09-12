@@ -267,6 +267,48 @@
   letter-spacing: 0.13em;
   color: #e0e5ed;
 }
+.shop-hero-controls {
+  position: absolute;
+  inset-inline-end: 28px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  direction: ltr;
+  z-index: 2;
+}
+.shop-hero-controls > button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff42;
+  border-radius: 50%;
+  color: #fff;
+  background: #07101d66;
+}
+.shop-hero-controls > button:hover {
+  background: #ffffff1f;
+  border-color: #fff;
+}
+.shop-hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 3px;
+}
+.shop-hero-dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 50%;
+  background: #ffffff70;
+}
+.shop-hero-dots button.active {
+  width: 22px;
+  border-radius: 8px;
+  background: var(--gold);
+}
 .shop-button,
 .shop-secondary {
   min-height: 44px;
@@ -1334,6 +1376,10 @@
   }
   .shop-hero-caption {
     font-size: 8px;
+  }
+  .shop-hero-controls {
+    inset-inline-end: 16px;
+    bottom: 17px;
   }
   .shop-editorial-hero {
     min-height: 390px;
