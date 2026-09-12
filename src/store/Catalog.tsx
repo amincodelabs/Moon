@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Search,
   SlidersHorizontal,
   ArrowUpRight,
   ShieldCheck,
@@ -21,8 +20,7 @@ import {
 } from "./ui";
 
 export function Catalog() {
-  const { tr, text, navigate } = useShop();
-  const [query, setQuery] = useState("");
+  const { tr, text, navigate, path, searchQuery, setSearchQuery } = useShop();
   const [category, setCategory] = useState("0");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState(300000000);
@@ -31,6 +29,10 @@ export function Catalog() {
   const [banner, setBanner] = useState(0);
   const [bannerPaused, setBannerPaused] = useState(false);
   const [page, setPage] = useState(1);
+  useEffect(() => {
+    const params = new URLSearchParams(path.split("?")[1]);
+    setCategory(params.get("category") ?? "0");
+  }, [path]);
   useEffect(() => {
     if (bannerPaused) return;
     const timer = window.setInterval(() => {
@@ -46,13 +48,16 @@ export function Catalog() {
       (!available || p.stock > 0) &&
       `${text(p.name)} ${p.brand} ${text(p.description)}`
         .toLowerCase()
-        .includes(query.toLowerCase().trim()),
+        .includes(searchQuery.toLowerCase().trim()),
   );
   if (sort === "low") items = [...items].sort((a, b) => a.price - b.price);
   if (sort === "high") items = [...items].sort((a, b) => b.price - a.price);
   if (sort === "new") items = [...items].reverse();
   if (sort === "best") items = [...items].sort((a, b) => b.sold - a.sold);
-  useEffect(() => setPage(1), [query, category, brand, price, available, sort]);
+  useEffect(
+    () => setPage(1),
+    [searchQuery, category, brand, price, available, sort],
+  );
   const pageSize = 6;
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
   const pagedItems = items.slice((page - 1) * pageSize, page * pageSize);
@@ -272,7 +277,7 @@ export function Catalog() {
             <button
               className="shop-text-link"
               onClick={() => {
-                setQuery("");
+                setSearchQuery("");
                 setCategory("0");
                 setBrand("");
                 setPrice(300000000);
@@ -286,15 +291,6 @@ export function Catalog() {
           </aside>
           <div>
             <div className="shop-catalog-tools">
-              <label className="shop-search">
-                <Search size={18} />
-                <input
-                  aria-label={tr("Search products", "جست‌وجوی محصولات")}
-                  placeholder={tr("Search equipment…", "جست‌وجوی تجهیزات…")}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-              </label>
               <select
                 aria-label={tr("Sort products", "مرتب‌سازی محصولات")}
                 value={sort}

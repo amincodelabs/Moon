@@ -6,6 +6,7 @@ export function transitionPreference(update: () => void) {
   active?.skipTransition();
   if (
     !document.startViewTransition ||
+    location.pathname.startsWith("/store") ||
     matchMedia("(prefers-reduced-motion: reduce)").matches
   ) {
     update();

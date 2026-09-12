@@ -9,6 +9,8 @@ export type StoreContextValue = Store & {
   navigate: (path: string) => void;
   notify: (en: string, fa: string) => void;
   path: string;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
 };
 export const StoreContext = createContext<StoreContextValue | null>(null);
 export function useShop() {

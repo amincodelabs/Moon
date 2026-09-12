@@ -8,6 +8,8 @@ import {
   Bot,
   Headphones,
   Send,
+  Search,
+  ChevronDown,
 } from "lucide-react";
 import { usePreferences } from "../preferences";
 import { Preferences } from "../components/Header";
@@ -105,6 +107,9 @@ export default function StoreApp() {
   const preferences = usePreferences();
   const store = useStore();
   const [path, setPath] = useState(location.pathname + location.search);
+  const [searchQuery, setSearchQuery] = useState(
+    () => new URLSearchParams(location.search).get("q") ?? "",
+  );
   const [toast, setToast] = useState<{ en: string; fa: string } | null>(null);
   const [chat, setChat] = useState(false);
   const tr = (en: string, fa: string) =>
@@ -113,6 +118,7 @@ export default function StoreApp() {
     if (next !== location.pathname + location.search)
       history.pushState(null, "", next);
     setPath(next);
+    setSearchQuery(new URLSearchParams(next.split("?")[1]).get("q") ?? "");
   };
   useEffect(() => {
     const pop = () => setPath(location.pathname + location.search);
@@ -145,6 +151,8 @@ export default function StoreApp() {
     navigate,
     notify: (en: string, fa: string) => setToast({ en, fa }),
     path,
+    searchQuery,
+    setSearchQuery,
   };
   return (
     <StoreContext.Provider value={values}>
@@ -175,18 +183,43 @@ export default function StoreApp() {
                 AVASTAR<small>{tr("THE STORE", "فروشگاه")}</small>
               </span>
             </a>
-            <nav aria-label={tr("Store navigation", "منوی فروشگاه")}>
-              <ShopLink
-                to="/store"
-                aria-current={page === "catalog" ? "page" : undefined}
+            <div className="shop-header-search">
+              <Search size={17} aria-hidden="true" />
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  navigate(
+                    `/store?q=${encodeURIComponent(searchQuery.trim())}`,
+                  );
+                }}
               >
-                {tr("Equipment", "تجهیزات")}
-              </ShopLink>
-              <ShopLink to="/store?collection=starters">
-                {tr("For starters", "برای شروع")}
-              </ShopLink>
-              <a href="/education">{tr("Learn", "یادگیری")}</a>
-            </nav>
+                <input
+                  aria-label={tr("Search products", "جست‌وجوی محصولات")}
+                  placeholder={tr("Search products…", "جست‌وجوی محصولات…")}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
+              </form>
+            </div>
+            <details className="shop-category-menu">
+              <summary>
+                {tr("Categories", "دسته‌بندی‌ها")} <ChevronDown size={15} />
+              </summary>
+              <div className="shop-category-dropdown">
+                <ShopLink to="/store?category=1">
+                  {tr("Telescopes", "تلسکوپ‌ها")}
+                </ShopLink>
+                <ShopLink to="/store?category=2">
+                  {tr("Binoculars", "دوربین‌های دوچشمی")}
+                </ShopLink>
+                <ShopLink to="/store?category=3">
+                  {tr("Accessories", "لوازم جانبی")}
+                </ShopLink>
+                <ShopLink to="/store">
+                  {tr("All products", "همه محصولات")}
+                </ShopLink>
+              </div>
+            </details>
             <div className="shop-header-actions">
               <Preferences {...preferences} />
               <ShopLink
