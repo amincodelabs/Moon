@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Heart,
   ShoppingBag,
   UserRound,
   Sparkles,
@@ -284,13 +283,6 @@ export default function StoreApp() {
             </details>
             <div className="shop-header-actions">
               <Preferences {...preferences} />
-              <ShopLink
-                to="/store/wishlist"
-                className="shop-icon"
-                aria-label={tr("Wishlist", "علاقه‌مندی‌ها")}
-              >
-                <Heart size={20} />
-              </ShopLink>
               <ShopLink
                 to="/store/account"
                 className="shop-icon"

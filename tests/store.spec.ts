@@ -131,7 +131,7 @@ test("catalog search, filters, sorting, collections, gallery and persistent wish
   await tile.getByRole("button", { name: /Previous image/ }).click();
   await expect(tile.locator("img")).toHaveAttribute("src", image!);
   await tile.getByRole("button", { name: "Save to wishlist" }).click();
-  await page.getByRole("link", { name: "Wishlist", exact: true }).click();
+  await page.goto("/store/wishlist");
   await page.reload();
   await expect(page.locator(".shop-product")).toHaveCount(1);
   await page.getByRole("button", { name: "Save to wishlist" }).click();
