@@ -178,7 +178,10 @@ export function Catalog() {
           </span>
         </div>
       )}
-      <section id="catalog" className="shop-catalog-section">
+      <section
+        id="catalog"
+        className={`shop-catalog-section ${isResultsPage ? "shop-results-section" : ""}`}
+      >
         <div className="shop-section-heading">
           <div>
             <p className="shop-overline">

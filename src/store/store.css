@@ -90,6 +90,9 @@
 .shop-main-catalog {
   padding-top: 28px;
 }
+.shop-main-results {
+  padding-top: 10px;
+}
 .shop-masthead {
   position: sticky;
   top: 0;
@@ -501,6 +504,9 @@
 .shop-catalog-section {
   padding-block: 52px 60px;
   scroll-margin-top: 150px;
+}
+.shop-results-section {
+  padding-top: 18px;
 }
 .shop-section-heading {
   display: flex;

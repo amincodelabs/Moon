@@ -312,7 +312,7 @@ export default function StoreApp() {
         <main
           id="shop-main"
           tabIndex={-1}
-          className={`shop-main ${page === "catalog" ? "shop-main-catalog" : ""}`}
+          className={`shop-main ${page === "catalog" || page === "search" || page === "category" ? "shop-main-catalog" : ""} ${page === "search" || page === "category" ? "shop-main-results" : ""}`}
         >
           {page === "catalog" ? (
             <Catalog />
