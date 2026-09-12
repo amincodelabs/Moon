@@ -20,7 +20,8 @@ import {
 } from "./ui";
 
 export function Catalog() {
-  const { tr, text, navigate, path, searchQuery, setSearchQuery } = useShop();
+  const { tr, text, money, navigate, path, searchQuery, setSearchQuery } =
+    useShop();
   const routeSegments = path.split("?")[0].split("/").filter(Boolean);
   const resultPage = routeSegments[1];
   const isResultsPage = resultPage === "search" || resultPage === "category";
@@ -323,16 +324,38 @@ export function Catalog() {
                 ))}
               </select>
             </label>
-            <label>
-              {tr("Maximum price (IRR)", "حداکثر قیمت (ریال)")}
+            <label className="shop-price-filter">
+              <span className="shop-filter-label">
+                {tr("Maximum price", "حداکثر قیمت")}
+                <output>{money(price)}</output>
+              </span>
               <input
-                type="number"
+                type="range"
                 min="0"
                 max="300000000"
                 step="1000000"
+                aria-label={tr("Maximum price (IRR)", "حداکثر قیمت (ریال)")}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
               />
+              <span className="shop-price-bounds">
+                <span>{money(0)}</span>
+                <span>{money(300000000)}</span>
+              </span>
+              <div className="shop-price-presets">
+                {[50000000, 150000000, 300000000].map((value) => (
+                  <button
+                    type="button"
+                    key={value}
+                    className={price === value ? "active" : ""}
+                    onClick={() => setPrice(value)}
+                  >
+                    {value === 300000000
+                      ? tr("Any", "همه")
+                      : `${tr("Under", "زیر")} ${money(value)}`}
+                  </button>
+                ))}
+              </div>
             </label>
             <label className="shop-choice">
               <input
