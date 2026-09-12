@@ -172,6 +172,30 @@ export const catalog: Product[] = [
     included: words("Eyepiece and protective caps", "چشمی و درپوش محافظ"),
     returnable: false,
   },
+  {
+    id: "redlight",
+    name: words("Orbit Redlight Torch", "چراغ قرمز اوربیت"),
+    category: "3",
+    brand: "Orbit",
+    images: ["eyepiece", "eyepiece-detail"],
+    price: 6800000,
+    stock: 35,
+    sold: 189,
+    variants: [words("Single torch", "چراغ تکی")],
+    description: words(
+      "Keep your night vision while you move between the stars.",
+      "هنگام حرکت میان ستاره‌ها، دید شب خود را حفظ کنید.",
+    ),
+    specs: [
+      [words("Light", "نور"), words("Red LED", "LED قرمز")],
+      [words("Runtime", "زمان روشنایی"), words("24 hours", "۲۴ ساعت")],
+    ],
+    included: words(
+      "Torch, wrist strap and batteries",
+      "چراغ، بند مچی و باتری",
+    ),
+    returnable: true,
+  },
 ];
 export const promotion = {
   title: words("A little closer to the stars", "یک قدم نزدیک‌تر به ستاره‌ها"),
@@ -224,6 +248,36 @@ export const bannerSlides = [
     ),
     link: "/education",
     action: words("Learn before you choose", "پیش از انتخاب یاد بگیرید"),
+  },
+];
+/** Merchandising is data-driven: an admin can add, reorder, or remove collections. */
+export const productCollections = [
+  {
+    id: "best-sellers",
+    title: words("Top selling", "پرفروش‌ترین‌ها"),
+    body: words(
+      "The instruments fellow explorers return to.",
+      "ابزارهایی که همراهان آسمان دوباره انتخاب می‌کنند.",
+    ),
+    productIds: ["binoculars", "refractor", "scout"],
+  },
+  {
+    id: "selected",
+    title: words("Selected collection", "مجموعه منتخب"),
+    body: words(
+      "A considered edit for your next clear night.",
+      "انتخابی دقیق برای شب صاف بعدی شما.",
+    ),
+    productIds: ["zenith", "widefield", "eyepiece"],
+  },
+  {
+    id: "starters",
+    title: words("For starters", "برای شروع"),
+    body: words(
+      "A friendly first step into the night sky.",
+      "اولین قدمی دلنشین به سوی آسمان شب.",
+    ),
+    productIds: ["refractor", "binoculars", "widefield"],
   },
 ];
 export type Line = { productId: string; variant: number; quantity: number };

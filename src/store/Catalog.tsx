@@ -10,7 +10,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { useShop } from "./context";
-import { bannerSlides, catalog, categories } from "./model";
+import { bannerSlides, catalog, categories, productCollections } from "./model";
 import {
   ProductTile,
   ShopLink,
@@ -21,8 +21,7 @@ import {
 } from "./ui";
 
 export function Catalog() {
-  const { tr, text, path, navigate } = useShop();
-  const params = new URLSearchParams(path.split("?")[1]);
+  const { tr, text, navigate } = useShop();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("0");
   const [brand, setBrand] = useState("");
@@ -31,6 +30,7 @@ export function Catalog() {
   const [sort, setSort] = useState("selected");
   const [banner, setBanner] = useState(0);
   const [bannerPaused, setBannerPaused] = useState(false);
+  const [page, setPage] = useState(1);
   useEffect(() => {
     if (bannerPaused) return;
     const timer = window.setInterval(() => {
@@ -38,7 +38,6 @@ export function Catalog() {
     }, 6500);
     return () => window.clearInterval(timer);
   }, [bannerPaused]);
-  const collection = params.get("collection") ?? "selected";
   let items = catalog.filter(
     (p) =>
       (category === "0" || p.category === category) &&
@@ -47,15 +46,16 @@ export function Catalog() {
       (!available || p.stock > 0) &&
       `${text(p.name)} ${p.brand} ${text(p.description)}`
         .toLowerCase()
-        .includes(query.toLowerCase().trim()) &&
-      (collection !== "starters" ||
-        ["refractor", "binoculars", "scout"].includes(p.id)),
+        .includes(query.toLowerCase().trim()),
   );
   if (sort === "low") items = [...items].sort((a, b) => a.price - b.price);
   if (sort === "high") items = [...items].sort((a, b) => b.price - a.price);
   if (sort === "new") items = [...items].reverse();
-  if (sort === "best" || (sort === "selected" && collection === "best"))
-    items = [...items].sort((a, b) => b.sold - a.sold);
+  if (sort === "best") items = [...items].sort((a, b) => b.sold - a.sold);
+  useEffect(() => setPage(1), [query, category, brand, price, available, sort]);
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const pagedItems = items.slice((page - 1) * pageSize, page * pageSize);
   return (
     <>
       <section
@@ -172,20 +172,54 @@ export function Catalog() {
             )}
           </p>
         </div>
-        <div className="shop-collections">
-          {[
-            ["selected", tr("Selected products", "محصولات منتخب")],
-            ["best", tr("Best sellers", "پرفروش‌ترین‌ها")],
-            ["starters", tr("For starters", "برای شروع")],
-          ].map(([key, label]) => (
-            <button
-              key={key}
-              aria-pressed={collection === key}
-              onClick={() => navigate(`/store?collection=${key}`)}
-            >
-              {label}
-            </button>
-          ))}
+        {productCollections.length > 0 && (
+          <div className="shop-merchandising">
+            {productCollections.map((collection) => {
+              const collectionProducts = collection.productIds
+                .map((id) => catalog.find((product) => product.id === id))
+                .filter((product): product is (typeof catalog)[number] =>
+                  Boolean(product),
+                );
+              return (
+                <section
+                  className="shop-collection"
+                  key={collection.id}
+                  aria-labelledby={`collection-${collection.id}`}
+                >
+                  <div className="shop-collection-heading">
+                    <div>
+                      <p className="shop-overline">
+                        {tr("CURATED COLLECTION", "مجموعه منتخب")}
+                      </p>
+                      <h3 id={`collection-${collection.id}`}>
+                        {text(collection.title)}
+                      </h3>
+                    </div>
+                    <p>{text(collection.body)}</p>
+                  </div>
+                  <div className="shop-product-grid">
+                    {collectionProducts.map((product) => (
+                      <ProductTile key={product.id} product={product} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        )}
+        <div className="shop-full-catalog-heading">
+          <div>
+            <p className="shop-overline">
+              {tr("THE FULL CATALOG", "کاتالوگ کامل")}
+            </p>
+            <h3>{tr("All products", "همه محصولات")}</h3>
+          </div>
+          <p>
+            {tr(
+              "Browse every product with filters and pages.",
+              "همه محصولات را با فیلتر و صفحه‌بندی ببینید.",
+            )}
+          </p>
         </div>
         <div className="shop-catalog-layout">
           <aside className="shop-filter-panel">
@@ -283,8 +317,8 @@ export function Catalog() {
               {items.length} {tr("instruments to explore", "تجهیز برای کاوش")}
             </p>
             {items.length ? (
-              <div className="shop-product-grid">
-                {items.map((p) => (
+              <div className="shop-product-grid shop-full-list">
+                {pagedItems.map((p) => (
                   <ProductTile key={p.id} product={p} />
                 ))}
               </div>
@@ -298,6 +332,44 @@ export function Catalog() {
                   )}
                 </p>
               </div>
+            )}
+            {items.length > 0 && (
+              <nav
+                className="shop-pagination"
+                aria-label={tr("Product pages", "صفحه‌های محصولات")}
+              >
+                <button
+                  type="button"
+                  aria-label={tr("Previous page", "صفحه قبل")}
+                  disabled={page === 1}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                >
+                  ‹
+                </button>
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1,
+                ).map((number) => (
+                  <button
+                    type="button"
+                    key={number}
+                    aria-current={number === page ? "page" : undefined}
+                    onClick={() => setPage(number)}
+                  >
+                    {number}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  aria-label={tr("Next page", "صفحه بعد")}
+                  disabled={page === totalPages}
+                  onClick={() =>
+                    setPage((current) => Math.min(totalPages, current + 1))
+                  }
+                >
+                  ›
+                </button>
+              </nav>
             )}
           </div>
         </div>

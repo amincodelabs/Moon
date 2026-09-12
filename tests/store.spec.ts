@@ -41,6 +41,7 @@ test("landing navigation, deep links and browser history", async ({ page }) => {
   ).toBeVisible();
   await page
     .getByRole("link", { name: "Horizon 80 Refractor", exact: true })
+    .first()
     .click();
   await expect(page).toHaveURL(/\/store\/product\/refractor$/);
   await page.reload();
@@ -77,43 +78,53 @@ test("catalog search, filters, sorting, collections, gallery and persistent wish
   page,
 }) => {
   await page.goto("/store");
-  await expect(page.locator(".shop-product")).toHaveCount(6);
+  await expect(page.locator(".shop-collection")).toHaveCount(3);
+  await expect(
+    page.getByRole("heading", { name: "Top selling" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Selected collection" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "For starters" }),
+  ).toBeVisible();
+  const fullList = page.locator(".shop-full-list");
+  await expect(fullList.locator(".shop-product")).toHaveCount(6);
+  await page.getByRole("button", { name: "2" }).last().click();
+  await expect(fullList.locator(".shop-product")).toHaveCount(1);
+  await page.getByRole("button", { name: "1" }).last().click();
   await page.getByLabel("Search products", { exact: true }).fill("Atlas");
-  await expect(page.locator(".shop-product")).toHaveCount(2);
+  await expect(fullList.locator(".shop-product")).toHaveCount(2);
   await page.getByLabel("Search products", { exact: true }).fill("");
   await page
     .getByRole("combobox", { name: "Brand", exact: true })
     .selectOption("Orbit");
   await page.getByLabel("In stock only", { exact: true }).check();
-  await expect(page.locator(".shop-product")).toHaveCount(1);
-  await page
-    .getByLabel("Maximum price (IRR)", { exact: true })
-    .fill("10000000");
+  await expect(fullList.locator(".shop-product")).toHaveCount(2);
+  await page.getByLabel("Maximum price (IRR)", { exact: true }).fill("5000000");
   await expect(page.getByText("No matches yet")).toBeVisible();
   await page.getByRole("button", { name: "Reset filters" }).click();
   await page.getByLabel("Telescopes", { exact: true }).check();
-  await expect(page.locator(".shop-product")).toHaveCount(2);
+  await expect(fullList.locator(".shop-product")).toHaveCount(2);
   await page.getByRole("button", { name: "Reset filters" }).click();
   await page.getByLabel("Sort products").selectOption("low");
-  await expect(page.locator(".shop-product").first()).toContainText(
-    "Orbit 12 mm Eyepiece",
+  await expect(fullList.locator(".shop-product").first()).toContainText(
+    "Orbit Redlight Torch",
   );
   await page.getByLabel("Sort products").selectOption("high");
-  await expect(page.locator(".shop-product").first()).toContainText(
+  await expect(fullList.locator(".shop-product").first()).toContainText(
     "Zenith 90",
   );
   await page.getByLabel("Sort products").selectOption("new");
-  await expect(page.locator(".shop-product").first()).toContainText(
-    "Orbit 25 mm",
+  await expect(fullList.locator(".shop-product").first()).toContainText(
+    "Orbit Redlight Torch",
   );
-  await page.getByRole("button", { name: "Best sellers", exact: true }).click();
-  await page.getByLabel("Sort products").selectOption("selected");
-  await expect(page.locator(".shop-product").first()).toContainText(
+  await page.getByLabel("Sort products").selectOption("best");
+  await expect(fullList.locator(".shop-product").first()).toContainText(
     "Atlas 10×50",
   );
-  await page.getByRole("button", { name: "For starters", exact: true }).click();
-  await expect(page.locator(".shop-product")).toHaveCount(3);
-  const tile = page.locator(".shop-product").first();
+  await page.getByLabel("Sort products").selectOption("selected");
+  const tile = fullList.locator(".shop-product").first();
   const image = await tile.locator("img").getAttribute("src");
   await tile.getByRole("button", { name: /Next image/ }).click();
   await expect(tile.locator("img")).not.toHaveAttribute("src", image!);
@@ -131,7 +142,7 @@ test("add-to-basket controls become a plus/minus quantity stepper", async ({
   page,
 }) => {
   await page.goto("/store");
-  const tile = page.locator(".shop-product").first();
+  const tile = page.locator(".shop-full-list .shop-product").first();
   await tile.getByRole("button", { name: "Add to cart", exact: true }).click();
   await expect(tile.locator(".shop-cart-stepper output")).toHaveText("1");
   await tile.getByRole("button", { name: /Increase quantity/ }).click();
