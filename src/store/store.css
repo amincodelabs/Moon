@@ -136,6 +136,7 @@
   letter-spacing: 0.14em;
   color: var(--gold-text);
   direction: ltr;
+  order: 1;
 }
 .shop-brand small {
   display: block;
@@ -164,6 +165,7 @@
   border-bottom: 1px solid var(--line);
   border-radius: 0;
   color: var(--muted);
+  order: 3;
 }
 .shop-header-search form {
   min-width: 0;
@@ -180,6 +182,7 @@
 .shop-category-menu {
   position: relative;
   font-size: 12px;
+  order: 2;
 }
 .shop-category-menu summary {
   list-style: none;
@@ -259,6 +262,7 @@
   align-items: center;
   gap: 10px;
   margin-inline-start: auto;
+  order: 4;
 }
 .shop-app .theme-control {
   display: flex;
@@ -1567,14 +1571,14 @@
     flex-basis: min(78vw, 320px);
   }
   .shop-header-search {
-    order: 3;
+    order: 4;
     width: 100%;
     max-width: none;
     flex-basis: 100%;
     margin-top: 13px;
   }
   .shop-category-menu {
-    order: 4;
+    order: 3;
     margin: 10px auto 0;
   }
   .shop-category-dropdown {
