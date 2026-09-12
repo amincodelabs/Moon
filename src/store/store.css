@@ -826,6 +826,25 @@
   max-width: 195px;
   font-size: 12px;
 }
+.shop-sort-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: auto;
+  margin: 0;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+}
+.shop-sort-control select {
+  width: auto;
+  max-width: 145px;
+  padding: 5px 22px 5px 3px;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+}
 .shop-results {
   font-size: 10px;
   color: var(--muted);

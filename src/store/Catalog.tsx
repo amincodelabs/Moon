@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
+  ArrowDownUp,
   SlidersHorizontal,
   ArrowUpRight,
   ShieldCheck,
@@ -400,23 +401,26 @@ export function Catalog() {
           </aside>
           <div>
             <div className="shop-catalog-tools">
-              <select
-                aria-label={tr("Sort products", "مرتب‌سازی محصولات")}
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-              >
-                {[
-                  ["selected", tr("Recommended", "پیشنهادی")],
-                  ["low", tr("Price: low to high", "قیمت: کم به زیاد")],
-                  ["high", tr("Price: high to low", "قیمت: زیاد به کم")],
-                  ["new", tr("Newest arrivals", "جدیدترین‌ها")],
-                  ["best", tr("Best sellers", "پرفروش‌ترین‌ها")],
-                ].map(([v, label]) => (
-                  <option key={v} value={v}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+              <label className="shop-sort-control">
+                <ArrowDownUp size={16} aria-hidden="true" />
+                <select
+                  aria-label={tr("Sort products", "مرتب‌سازی محصولات")}
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  {[
+                    ["selected", tr("Recommended", "پیشنهادی")],
+                    ["low", tr("Price: low to high", "قیمت: کم به زیاد")],
+                    ["high", tr("Price: high to low", "قیمت: زیاد به کم")],
+                    ["new", tr("Newest arrivals", "جدیدترین‌ها")],
+                    ["best", tr("Best sellers", "پرفروش‌ترین‌ها")],
+                  ].map(([v, label]) => (
+                    <option key={v} value={v}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
             <p className="shop-results" role="status">
               {items.length} {tr("instruments to explore", "تجهیز برای کاوش")}
