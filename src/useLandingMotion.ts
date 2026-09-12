@@ -1,7 +1,9 @@
 import { useEffect, type RefObject } from "react";
+import { useScrollScenes } from "./useScrollScenes";
 
-/** Observers keep motion off the scroll thread and respect live preference changes. */
+/** Observers gate motion work and respect live preference changes. */
 export function useLandingMotion(header: RefObject<HTMLDivElement | null>) {
+  useScrollScenes();
   useEffect(() => {
     const element = header.current;
     if (!element) return;

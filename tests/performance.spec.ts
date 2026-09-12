@@ -17,13 +17,29 @@ test("scroll frame and layout-shift probe", async ({ page }) => {
   await client.send("Emulation.setCPUThrottlingRate", { rate: 4 });
   const result = await page.evaluate(async () => {
     let cls = 0;
+    const shifts: unknown[] = [];
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         const shift = entry as PerformanceEntry & {
           value: number;
           hadRecentInput: boolean;
+          sources: {
+            node: HTMLElement;
+            previousRect: DOMRectReadOnly;
+            currentRect: DOMRectReadOnly;
+          }[];
         };
-        if (!shift.hadRecentInput) cls += shift.value;
+        if (!shift.hadRecentInput) {
+          cls += shift.value;
+          shifts.push({
+            value: shift.value,
+            sources: shift.sources.map((s) => ({
+              element: s.node?.className,
+              before: s.previousRect.toJSON(),
+              after: s.currentRect.toJSON(),
+            })),
+          });
+        }
       }
     });
     observer.observe({ type: "layout-shift" });
@@ -47,6 +63,7 @@ test("scroll frame and layout-shift probe", async ({ page }) => {
       p95FrameMs: samples[Math.floor(samples.length * 0.95)],
       framesOver50ms: samples.filter((n) => n > 50).length,
       scrollCLS: cls,
+      shifts,
     };
   });
   await mkdir("artifacts", { recursive: true });

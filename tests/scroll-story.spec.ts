@@ -212,3 +212,30 @@ test("touch image swipes preserve native page scrolling and visible controls", a
   ).toEqual([]);
   await context.close();
 });
+
+test("desktop hero visibly zooms while held below the campaign", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+  await page
+    .locator(".hero-buttons")
+    .evaluate((e) => Promise.all(e.getAnimations().map((a) => a.finished)));
+  await page.screenshot({ path: "artifacts/hero-scroll-start.png" });
+  const header = (await page.locator(".masthead").boundingBox())!.height;
+  await page.evaluate(() => scrollTo({ top: 300, behavior: "instant" }));
+  await expect
+    .poll(async () => (await page.locator(".hero").boundingBox())!.y)
+    .toBeCloseTo(header, 0);
+  await expect
+    .poll(() =>
+      page
+        .locator(".hero-depth")
+        .evaluate((e) => new DOMMatrix(getComputedStyle(e).transform).a),
+    )
+    .toBeGreaterThan(1.1);
+  await page.screenshot({ path: "artifacts/hero-scroll-zoom.png" });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".hero")).toHaveCSS("position", "relative");
+  await expect(page.locator(".hero-depth")).toHaveCSS("transform", "none");
+});
