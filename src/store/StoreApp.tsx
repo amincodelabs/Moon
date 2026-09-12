@@ -157,7 +157,7 @@ export default function StoreApp() {
         ? 320
         : 28
       : complete
-        ? 1200
+        ? 2400
         : 45;
     const timer = window.setTimeout(() => {
       if (searchHintDeleting) {
@@ -257,7 +257,7 @@ export default function StoreApp() {
               >
                 <input
                   aria-label={tr("Search products", "جست‌وجوی محصولات")}
-                  placeholder={searchHintText || searchHints[searchHintIndex]}
+                  placeholder={searchHintText}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                 />
