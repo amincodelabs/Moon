@@ -755,10 +755,19 @@
   border: 0;
   border-radius: 99px;
   accent-color: var(--gold);
+  background: transparent;
+}
+.shop-price-slider::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 7px;
+  height: 5px;
+  border-radius: 99px;
   background: var(--surface2);
 }
 .shop-price-slider input:first-child {
-  z-index: 2;
+  z-index: 4;
 }
 .shop-price-slider input:last-child {
   z-index: 3;
@@ -831,18 +840,18 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   margin: 0;
-  padding: 6px 9px;
+  padding: 0;
   border: 1px solid var(--line);
-  border-radius: 50%;
+  border-radius: 5px;
   color: var(--muted);
 }
 .shop-sort-control:hover,
 .shop-sort-control:focus-within {
   color: var(--gold-text);
-  border-color: var(--gold);
+  border-color: var(--gold-text);
 }
 .shop-sort-control select {
   position: absolute;
