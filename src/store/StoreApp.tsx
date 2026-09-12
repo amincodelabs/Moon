@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ShoppingBag,
   UserRound,
@@ -109,6 +109,20 @@ export default function StoreApp() {
   const [searchQuery, setSearchQuery] = useState(
     () => new URLSearchParams(location.search).get("q") ?? "",
   );
+  const searchHints = useMemo(
+    () =>
+      preferences.language === "fa"
+        ? ["تلسکوپ برای شروع", "چشمی میدان‌باز", "دوربین دوچشمی ۱۰×۵۰"]
+        : [
+            "a telescope for beginners",
+            "a widefield eyepiece",
+            "10×50 binoculars",
+          ],
+    [preferences.language],
+  );
+  const [searchHintIndex, setSearchHintIndex] = useState(0);
+  const [searchHintText, setSearchHintText] = useState("");
+  const [searchHintDeleting, setSearchHintDeleting] = useState(false);
   const [toast, setToast] = useState<{ en: string; fa: string } | null>(null);
   const [chat, setChat] = useState(false);
   const categoryMenuRef = useRef<HTMLDetailsElement>(null);
@@ -125,6 +139,41 @@ export default function StoreApp() {
     addEventListener("popstate", pop);
     return () => removeEventListener("popstate", pop);
   }, []);
+  useEffect(() => {
+    setSearchHintIndex(0);
+    setSearchHintText("");
+    setSearchHintDeleting(false);
+  }, [preferences.language]);
+  useEffect(() => {
+    const target = searchHints[searchHintIndex];
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setSearchHintText(target);
+      return;
+    }
+    const complete = searchHintText === target;
+    const empty = searchHintText.length === 0;
+    const delay = complete
+      ? 1200
+      : empty && searchHintDeleting
+        ? 320
+        : searchHintDeleting
+          ? 28
+          : 45;
+    const timer = window.setTimeout(() => {
+      if (complete) {
+        setSearchHintDeleting(true);
+      } else if (searchHintDeleting) {
+        setSearchHintText((current) => current.slice(0, -1));
+        if (searchHintText.length === 1) {
+          setSearchHintDeleting(false);
+          setSearchHintIndex((current) => (current + 1) % searchHints.length);
+        }
+      } else {
+        setSearchHintText(target.slice(0, searchHintText.length + 1));
+      }
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [searchHintDeleting, searchHintIndex, searchHintText, searchHints]);
   useEffect(() => {
     const dismiss = (event: PointerEvent) => {
       const menu = categoryMenuRef.current;
@@ -208,7 +257,7 @@ export default function StoreApp() {
               >
                 <input
                   aria-label={tr("Search products", "جست‌وجوی محصولات")}
-                  placeholder={tr("Search products…", "جست‌وجوی محصولات…")}
+                  placeholder={searchHintText || searchHints[searchHintIndex]}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                 />
