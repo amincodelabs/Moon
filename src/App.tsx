@@ -8,7 +8,6 @@ import { Products } from "./components/Products";
 import { Experiences, Editorial } from "./components/Experiences";
 import { Journey, Footer } from "./components/JourneyFooter";
 import { Panels, type Panel } from "./components/Panels";
-import { StorePage } from "./components/StorePage";
 import { useLandingMotion } from "./useLandingMotion";
 export default function App() {
   const preferences = usePreferences();
@@ -21,9 +20,16 @@ export default function App() {
     initialRoute && !isStore ? "coming" : null,
   );
   const [target, setTarget] = useState<RouteKey>(initialRoute ?? "store");
-  const [authenticated, setAuthenticated] = useState(
-    () => readPreference("avastar-demo-account", "false") === "true",
-  );
+  const [authenticated, setAuthenticated] = useState(() => {
+    try {
+      return (
+        JSON.parse(readPreference("avastar-store-v1", "null"))?.signedIn ===
+        true
+      );
+    } catch {
+      return false;
+    }
+  });
   const [announcement, setAnnouncement] = useState(
     () =>
       readPreference(`avastar-campaign-${campaign.id}`, "visible") !==
@@ -31,6 +37,10 @@ export default function App() {
   );
   const opener = useRef<HTMLElement | null>(null);
   const openPanel = (next: Panel) => {
+    if (next === "account") {
+      location.assign("/store/account");
+      return;
+    }
     if (!panel) opener.current = document.activeElement as HTMLElement;
     setPanel(next);
   };
@@ -87,18 +97,14 @@ export default function App() {
         />
         <div className="reading-progress" aria-hidden="true" />
       </div>
-      {isStore ? (
-        <StorePage t={t} language={language} go={go} />
-      ) : (
-        <main id="main" tabIndex={-1}>
-          <Hero t={t} go={go} />
-          <Discovery t={t} go={go} />
-          <Products t={t} language={language} go={go} />
-          <Experiences t={t} go={go} />
-          <Editorial t={t} go={go} />
-          <Journey t={t} go={go} />
-        </main>
-      )}
+      <main id="main" tabIndex={-1}>
+        <Hero t={t} go={go} />
+        <Discovery t={t} go={go} />
+        <Products t={t} language={language} go={go} />
+        <Experiences t={t} go={go} />
+        <Editorial t={t} go={go} />
+        <Journey t={t} go={go} />
+      </main>
       <Footer t={t} go={go} />
       <button
         className="chat-launcher"

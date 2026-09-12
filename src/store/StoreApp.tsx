@@ -1,0 +1,315 @@
+import { useEffect, useState } from "react";
+import {
+  Heart,
+  ShoppingBag,
+  UserRound,
+  Sparkles,
+  MessageCircle,
+  Bot,
+  Headphones,
+  Send,
+} from "lucide-react";
+import { usePreferences } from "../preferences";
+import { Preferences } from "../components/Header";
+import { Modal } from "../components/Primitives";
+import { StoreContext, useShop } from "./context";
+import { promotion, useStore, catalog } from "./model";
+import { Catalog, ProductDetails } from "./Catalog";
+import { Account, Auth } from "./Account";
+import { Cart, Checkout, Payment } from "./Purchase";
+import { Empty, ProductTile, ShopLink } from "./ui";
+import "./store.css";
+
+function Chat({ close }: { close: () => void }) {
+  const { tr } = useShop();
+  const { t } = usePreferences();
+  const [mode, setMode] = useState("ai");
+  const [messages, setMessages] = useState<{ mode: string; body: string }[]>(
+    [],
+  );
+  return (
+    <Modal
+      title={tr("A little help exploring", "کمی کمک برای کاوش")}
+      t={t}
+      close={close}
+    >
+      <div className="shop-chat">
+        <div className="shop-collections">
+          <button aria-pressed={mode === "ai"} onClick={() => setMode("ai")}>
+            <Bot size={16} />
+            {tr("AI guide", "راهنمای هوشمند")}
+          </button>
+          <button
+            aria-pressed={mode === "support"}
+            onClick={() => setMode("support")}
+          >
+            <Headphones size={16} />
+            {tr("Customer support", "پشتیبانی")}
+          </button>
+        </div>
+        <p className="shop-notice">
+          {tr(
+            "Chat interface preview. Messages stay on this screen; no AI or support agent is connected.",
+            "پیش‌نمایش رابط گفتگو. پیام‌ها در همین صفحه می‌مانند؛ هوش مصنوعی یا پشتیبان متصل نیست.",
+          )}
+        </p>
+        <div className="shop-chat-messages" role="log" aria-live="polite">
+          {messages
+            .filter((m) => m.mode === mode)
+            .map((m, i) => (
+              <p key={i}>
+                {m.body}
+                <small>
+                  {tr("Preview only · not sent", "فقط پیش‌نمایش · ارسال نشده")}
+                </small>
+              </p>
+            ))}
+        </div>
+        <form
+          className="shop-inline"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const body = String(
+              new FormData(e.currentTarget).get("message"),
+            ).trim();
+            if (body) setMessages((m) => [...m, { mode, body }]);
+            e.currentTarget.reset();
+          }}
+        >
+          <input
+            name="message"
+            required
+            maxLength={1000}
+            aria-label={tr("Your message", "پیام شما")}
+            placeholder={
+              mode === "ai"
+                ? tr("Ask about equipment…", "درباره تجهیزات بپرسید…")
+                : tr(
+                    "Ask about an order or return…",
+                    "درباره سفارش یا مرجوعی بپرسید…",
+                  )
+            }
+          />
+          <button
+            className="shop-icon"
+            aria-label={tr("Preview message", "پیش‌نمایش پیام")}
+          >
+            <Send size={19} />
+          </button>
+        </form>
+      </div>
+    </Modal>
+  );
+}
+export default function StoreApp() {
+  const preferences = usePreferences();
+  const store = useStore();
+  const [path, setPath] = useState(location.pathname + location.search);
+  const [toast, setToast] = useState<{ en: string; fa: string } | null>(null);
+  const [chat, setChat] = useState(false);
+  const tr = (en: string, fa: string) =>
+    preferences.language === "fa" ? fa : en;
+  const navigate = (next: string) => {
+    if (next !== location.pathname + location.search)
+      history.pushState(null, "", next);
+    setPath(next);
+  };
+  useEffect(() => {
+    const pop = () => setPath(location.pathname + location.search);
+    addEventListener("popstate", pop);
+    return () => removeEventListener("popstate", pop);
+  }, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.getElementById("shop-main")?.focus({ preventScroll: true });
+  }, [path]);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+  useEffect(() => {
+    document.title = `${preferences.language === "fa" ? "فروشگاه آوااستار" : "AvaStar Store"} · ${decodeURIComponent(path.split("/").filter(Boolean).at(-1)?.split("?")[0] ?? "")}`;
+  }, [path, preferences.language]);
+  const segments = path.split("?")[0].split("/").filter(Boolean);
+  const page = segments[1] ?? "catalog";
+  const params = new URLSearchParams(path.split("?")[1]);
+  const count = store.state.cart.reduce((n, l) => n + l.quantity, 0);
+  const values = {
+    ...store,
+    language: preferences.language,
+    tr,
+    text: (value: { en: string; fa: string }) => value[preferences.language],
+    money: (n: number) =>
+      `${new Intl.NumberFormat(preferences.language === "fa" ? "fa-IR" : "en-US").format(n)} ${tr("IRR", "ریال")}`,
+    navigate,
+    notify: (en: string, fa: string) => setToast({ en, fa }),
+    path,
+  };
+  return (
+    <StoreContext.Provider value={values}>
+      <div className="shop-app">
+        <a href="#shop-main" className="skip-link">
+          {tr("Skip to content", "رفتن به محتوا")}
+        </a>
+        <div className="shop-masthead">
+          {Date.now() < Date.parse(promotion.expires) && (
+            <div className="shop-promotion">
+              <Sparkles size={13} />
+              <span>
+                {values.text(promotion.title)} · {values.text(promotion.body)}
+              </span>
+              <ShopLink to={promotion.destination}>
+                {tr("Explore", "کاوش")} ↗
+              </ShopLink>
+            </div>
+          )}
+          <header className="shop-header">
+            <a
+              href="/"
+              className="shop-brand"
+              aria-label={tr("AvaStar home", "صفحه اصلی آوااستار")}
+            >
+              <Sparkles size={30} strokeWidth={1.2} />
+              <span>
+                AVASTAR<small>{tr("THE STORE", "فروشگاه")}</small>
+              </span>
+            </a>
+            <nav aria-label={tr("Store navigation", "منوی فروشگاه")}>
+              <ShopLink
+                to="/store"
+                aria-current={page === "catalog" ? "page" : undefined}
+              >
+                {tr("Equipment", "تجهیزات")}
+              </ShopLink>
+              <ShopLink to="/store?collection=starters">
+                {tr("For starters", "برای شروع")}
+              </ShopLink>
+              <a href="/education">{tr("Learn", "یادگیری")}</a>
+            </nav>
+            <div className="shop-header-actions">
+              <Preferences {...preferences} />
+              <ShopLink
+                to="/store/wishlist"
+                className="shop-icon"
+                aria-label={tr("Wishlist", "علاقه‌مندی‌ها")}
+              >
+                <Heart size={20} />
+              </ShopLink>
+              <ShopLink
+                to="/store/account"
+                className="shop-icon"
+                aria-label={tr("My account", "حساب من")}
+              >
+                <UserRound size={20} />
+              </ShopLink>
+              <ShopLink
+                to="/store/cart"
+                className="shop-bag"
+                aria-label={`${tr("Cart", "سبد خرید")} (${count})`}
+              >
+                <ShoppingBag size={20} />
+                <span>{count}</span>
+              </ShopLink>
+            </div>
+          </header>
+        </div>
+        <main
+          id="shop-main"
+          tabIndex={-1}
+          className={`shop-main ${page === "catalog" ? "shop-main-catalog" : ""}`}
+        >
+          {page === "catalog" ? (
+            <Catalog />
+          ) : page === "product" ? (
+            <ProductDetails key={segments[2]} id={segments[2]} />
+          ) : page === "cart" ? (
+            <Cart />
+          ) : page === "checkout" ? (
+            <Checkout />
+          ) : page === "payment" ? (
+            <Payment key={segments[2]} id={segments[2]} />
+          ) : ["login", "register", "recovery"].includes(page) ? (
+            <Auth
+              key={page}
+              mode={page}
+              next={params.get("next") ?? "/store/account"}
+            />
+          ) : page === "account" ? (
+            <Account
+              key={segments.slice(2).join("/")}
+              tab={segments[2]}
+              orderId={segments[3]}
+            />
+          ) : page === "wishlist" ? (
+            <>
+              <h1>{tr("Your wishlist", "علاقه‌مندی‌های شما")}</h1>
+              {store.state.wishlist.length ? (
+                <div className="shop-product-grid">
+                  {catalog
+                    .filter((p) => store.state.wishlist.includes(p.id))
+                    .map((p) => (
+                      <ProductTile product={p} key={p.id} />
+                    ))}
+                </div>
+              ) : (
+                <Empty
+                  title={tr(
+                    "Keep a little inspiration",
+                    "کمی الهام ذخیره کنید",
+                  )}
+                  body={tr(
+                    "Save products using the heart. They will be here when you return.",
+                    "با دکمه قلب محصولات را ذخیره کنید تا هنگام بازگشت اینجا باشند.",
+                  )}
+                />
+              )}
+            </>
+          ) : (
+            <Empty
+              title={tr("Page not found", "صفحه پیدا نشد")}
+              body={tr(
+                "Let's find your way back to the stars.",
+                "به مسیر کشف ستاره‌ها برگردیم.",
+              )}
+            />
+          )}
+        </main>
+        <footer className="shop-footer">
+          <div>
+            <a href="/" className="shop-brand">
+              <Sparkles size={25} /> AVASTAR
+            </a>
+            <p>
+              {tr("For a lifetime of looking up.", "برای یک عمر تماشای آسمان.")}
+            </p>
+          </div>
+          <nav aria-label={tr("Explore AvaStar", "کاوش آوااستار")}>
+            <a href="/">{tr("Home", "خانه")}</a>
+            <a href="/tours">{tr("Tours", "تورها")}</a>
+            <a href="/education">{tr("Education", "آموزش")}</a>
+            <a href="/magazine">{tr("Magazine", "مجله")}</a>
+          </nav>
+          <p className="shop-muted">
+            {tr(
+              "Demo store · sample products and policies · prices in Iranian rials · no real payments or shipments.",
+              "فروشگاه نمایشی · کالاها و سیاست‌های نمونه · قیمت‌ها به ریال ایران · بدون پرداخت یا ارسال واقعی.",
+            )}
+          </p>
+        </footer>
+        <button
+          className="shop-chat-launcher"
+          aria-label={tr("Open chat", "باز کردن گفتگو")}
+          onClick={() => setChat(true)}
+        >
+          <MessageCircle size={22} />
+          <span>{tr("Need a hand?", "کمک می‌خواهید؟")}</span>
+        </button>
+        {chat && <Chat close={() => setChat(false)} />}
+        <div className="shop-toast" role="status" aria-live="polite">
+          {toast && <span>{toast[preferences.language]}</span>}
+        </div>
+      </div>
+    </StoreContext.Provider>
+  );
+}

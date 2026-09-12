@@ -13,6 +13,9 @@ export function transitionPreference(update: () => void) {
   }
   const transition = document.startViewTransition(() => flushSync(update));
   active = transition;
+  // A rapid second preference change skips the snapshot and rejects `ready`.
+  // The preference update still completes; consume that expected rejection.
+  void transition.ready.catch(() => {});
   void transition.finished
     .catch(() => {})
     .finally(() => {

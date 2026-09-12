@@ -47,6 +47,14 @@ Added an authenticated, UI-only account dashboard that keeps the existing AvaSta
 
 Added `tests/user-panel.spec.ts` for dashboard rendering, tab transitions, preference changes, Escape dismissal, and keyboard focus containment. Static checks and the production build pass; the dedicated production browser suite passes all four tests.
 
+## Full storefront demo
+
+The store is now a separate route and React experience at `/store`; landing-page store links perform real navigation instead of opening a coming-soon modal. The storefront implements the product and customer purchasing scope from the supplied requirements as a coherent local demo: six products with multiple card/detail images, price/discount/availability, category and curated collections, free-text search, brand/price/stock filters, sorting, variants, product specifications, box contents, warranty and return policies, downloadable manuals, ratings/reviews, similar/compatible products, and content links to Tours, Education, and Magazine.
+
+The purchasing flow includes a local anonymous cart with variant-aware quantities, removal and returnability conditions; `SKY10` voucher validation and expiry; AvaStar coin balance/eligibility/deduction; registration, sign-in, logout and recovery; editable saved addresses; standard/express delivery; online gateway and SnappPay payment simulations with success/failure/retry; order history, payment breakdowns, shipment-status copy, downloadable receipts; wishlist persistence; purchase-eligible reviews; and return request forms with request/refund statuses. A UI-only AI/support chat makes its disconnected state explicit. All state is stored in `localStorage` for the demo and all amounts are Iranian rials.
+
+New files are under `src/store/` (`StoreApp`, catalog, account, purchase, model, context, UI and styles). `tests/store.spec.ts` covers deep-link navigation, browser history, filters, sorting, collections, image swipes, variants, cart persistence, voucher/coin calculations, authentication, address CRUD, both payment methods, receipt download, retry behavior, orders, reviews, returns, expiry, responsive RTL/LTR themes, reduced motion, keyboard interaction, chat, screenshots, and axe scans. Production verification: `npm run typecheck`, `npm run lint`, `npm run build`, and `TEST_PRODUCTION=1 npm test` passed with 36 tests (the opt-in performance probe remains skipped).
+
 ## Motion and sticky campaign update
 
 The campaign and navigation now share a sticky masthead. A ResizeObserver tracks its actual height so anchor destinations stay clear of the header, including after campaign dismissal and on narrow screens. A scroll progress line is progressively enhanced where CSS scroll timelines are supported.

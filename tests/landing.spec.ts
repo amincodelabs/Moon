@@ -12,13 +12,13 @@ test("Persian destinations and honest future routes", async ({ page }) => {
         .getByRole("navigation", { name: "فهرست" })
         .getByRole("link", { name, exact: true }),
     ).toBeVisible();
-  await page.locator(".destination").first().click();
+  await page.locator(".destination").nth(1).click();
   await expect(page.getByRole("dialog")).toContainText(
     "این مسیر به‌زودی باز می‌شود",
   );
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(page.locator(".destination").first()).toBeFocused();
+  await expect(page.locator(".destination").nth(1)).toBeFocused();
 });
 test("language changes content, metadata and persists", async ({ page }) => {
   await page.getByRole("button", { name: "Switch to English" }).click();
@@ -50,22 +50,16 @@ test("all theme choices persist and system follows device", async ({
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
-test("account demo, persistence and logout", async ({ page }) => {
+test("landing account opens the full store account page", async ({ page }) => {
   await page
     .getByRole("button", { name: "ورود / ثبت‌نام", exact: true })
     .click();
-  await expect(page.getByRole("dialog")).toContainText(
-    "این حساب فقط نمایشی است",
-  );
-  await page.getByRole("button", { name: "ورود به حساب نمایشی" }).click();
+  await expect(page).toHaveURL(/\/store\/account$/);
   await expect(
-    page.getByRole("button", { name: "حساب کاربری", exact: true }),
+    page.getByRole("heading", { name: "خوش آمدید", exact: true }),
   ).toBeVisible();
-  await page.reload();
-  await page.getByRole("button", { name: "حساب کاربری", exact: true }).click();
-  await page.getByRole("button", { name: "خروج از حساب نمایشی" }).click();
   await expect(
-    page.getByRole("button", { name: "ورود / ثبت‌نام", exact: true }),
+    page.getByRole("link", { name: "تازه‌واردید؟ حساب بسازید" }),
   ).toBeVisible();
 });
 test("campaign dismissal persists", async ({ page }) => {
