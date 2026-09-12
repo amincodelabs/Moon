@@ -203,21 +203,60 @@ export default function StoreApp() {
             </div>
             <details className="shop-category-menu">
               <summary>
-                {tr("Categories", "دسته‌بندی‌ها")} <ChevronDown size={15} />
+                {tr("Shop categories", "دسته‌بندی‌های فروشگاه")}{" "}
+                <ChevronDown size={15} />
               </summary>
               <div className="shop-category-dropdown">
-                <ShopLink to="/store?category=1">
-                  {tr("Telescopes", "تلسکوپ‌ها")}
-                </ShopLink>
-                <ShopLink to="/store?category=2">
-                  {tr("Binoculars", "دوربین‌های دوچشمی")}
-                </ShopLink>
-                <ShopLink to="/store?category=3">
-                  {tr("Accessories", "لوازم جانبی")}
-                </ShopLink>
-                <ShopLink to="/store">
-                  {tr("All products", "همه محصولات")}
-                </ShopLink>
+                <div className="shop-category-group">
+                  <strong>{tr("Telescopes", "تلسکوپ‌ها")}</strong>
+                  <ShopLink to="/store?category=1">
+                    {tr("All telescopes", "همه تلسکوپ‌ها")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=1&q=Refractor">
+                    {tr("Refractor telescopes", "تلسکوپ‌های شکستی")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=1&q=Explorer">
+                    {tr("Explorer telescopes", "تلسکوپ‌های اکسپلورر")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=1&q=kit">
+                    {tr("Complete telescope kits", "کیت‌های کامل تلسکوپ")}
+                  </ShopLink>
+                </div>
+                <div className="shop-category-group">
+                  <strong>{tr("Binoculars", "دوربین‌های دوچشمی")}</strong>
+                  <ShopLink to="/store?category=2">
+                    {tr("All binoculars", "همه دوربین‌های دوچشمی")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=2&q=10×50">
+                    {tr("10×50 binoculars", "دوربین‌های ۱۰×۵۰")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=2&q=Compact">
+                    {tr("Compact binoculars", "دوربین‌های کامپکت")}
+                  </ShopLink>
+                </div>
+                <div className="shop-category-group">
+                  <strong>{tr("Accessories", "لوازم جانبی")}</strong>
+                  <ShopLink to="/store?category=3">
+                    {tr("All accessories", "همه لوازم جانبی")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=3&q=Eyepiece">
+                    {tr("Eyepieces", "چشمی‌ها")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=3&q=Widefield">
+                    {tr("Widefield viewing", "تماشای میدان‌باز")}
+                  </ShopLink>
+                  <ShopLink to="/store?category=3&q=Torch">
+                    {tr("Observing essentials", "ملزومات رصد")}
+                  </ShopLink>
+                </div>
+                <div className="shop-category-feature">
+                  <span>
+                    {tr("Find your next view", "نمای بعدی خود را پیدا کنید")}
+                  </span>
+                  <ShopLink to="/store">
+                    {tr("Browse all products", "مشاهده همه محصولات")} ↗
+                  </ShopLink>
+                </div>
               </div>
             </details>
             <div className="shop-header-actions">
