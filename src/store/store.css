@@ -165,9 +165,6 @@
   border-radius: 0;
   color: var(--muted);
 }
-.shop-header-search:focus-within {
-  border-bottom-color: var(--gold-text);
-}
 .shop-header-search form {
   min-width: 0;
   flex: 1;
@@ -190,9 +187,13 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 11px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 10px 15px;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+  border-radius: 999px;
+  color: var(--gold-text);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
 }
 .shop-category-menu summary::-webkit-details-marker {
   display: none;
@@ -200,6 +201,7 @@
 .shop-category-menu[open] summary {
   color: var(--gold-text);
   border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
 }
 .shop-category-dropdown {
   position: absolute;
@@ -266,10 +268,12 @@
   gap: 5px;
 }
 .shop-app .theme-control select {
-  width: 83px;
+  width: 32px;
   margin: 0;
   font-size: 11px;
-  padding: 8px;
+  padding: 8px 0;
+  opacity: 0;
+  cursor: pointer;
 }
 .shop-app .theme-control svg {
   position: static;

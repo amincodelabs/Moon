@@ -1,4 +1,13 @@
-import { Globe2, Menu, Moon, Search, Sparkles, UserRound } from "lucide-react";
+import {
+  Globe2,
+  Menu,
+  Moon,
+  Monitor,
+  Search,
+  Sparkles,
+  Sun,
+  UserRound,
+} from "lucide-react";
 import type { Copy, Language } from "../locales";
 import type { Theme } from "../preferences";
 import { destinations } from "../data";
@@ -38,10 +47,16 @@ export function Preferences({
         onClick={() => setLanguage(language === "fa" ? "en" : "fa")}
       >
         <Globe2 size={17} />
-        <span>{t.language}</span>
+        <span>{language === "fa" ? "FA" : "EN"}</span>
       </button>
       <label className="theme-control">
-        <Moon size={17} aria-hidden="true" />
+        {theme === "light" ? (
+          <Sun size={17} aria-hidden="true" />
+        ) : theme === "dark" ? (
+          <Moon size={17} aria-hidden="true" />
+        ) : (
+          <Monitor size={17} aria-hidden="true" />
+        )}
         <span className="sr-only">{t.theme}</span>
         <select
           aria-label={t.theme}
