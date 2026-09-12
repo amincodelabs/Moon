@@ -5,7 +5,7 @@ import { destinations } from "../data";
 import { DestinationLink, type Navigate } from "./Primitives";
 export function Brand({ t }: { t: Copy }) {
   return (
-    <a href="#" className="brand" aria-label={t.brand}>
+    <a href="/" className="brand" aria-label={t.brand}>
       <span className="brand-symbol" aria-hidden="true">
         <Sparkles size={31} strokeWidth={1.25} />
       </span>

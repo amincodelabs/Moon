@@ -8,14 +8,18 @@ import { Products } from "./components/Products";
 import { Experiences, Editorial } from "./components/Experiences";
 import { Journey, Footer } from "./components/JourneyFooter";
 import { Panels, type Panel } from "./components/Panels";
+import { StorePage } from "./components/StorePage";
 import { useLandingMotion } from "./useLandingMotion";
 export default function App() {
   const preferences = usePreferences();
   const { t, language } = preferences;
+  const isStore = location.pathname === routes.store;
   const initialRoute = (Object.entries(routes) as [RouteKey, string][]).find(
     ([, path]) => location.pathname === path,
   )?.[0];
-  const [panel, setPanel] = useState<Panel>(initialRoute ? "coming" : null);
+  const [panel, setPanel] = useState<Panel>(
+    initialRoute && !isStore ? "coming" : null,
+  );
   const [target, setTarget] = useState<RouteKey>(initialRoute ?? "store");
   const [authenticated, setAuthenticated] = useState(
     () => readPreference("avastar-demo-account", "false") === "true",
@@ -38,6 +42,10 @@ export default function App() {
     });
   };
   const go = (route: RouteKey) => {
+    if (route === "store") {
+      window.location.assign(routes.store);
+      return;
+    }
     setTarget(route);
     openPanel(route === "account" || route === "login" ? "account" : "coming");
   };
@@ -79,14 +87,18 @@ export default function App() {
         />
         <div className="reading-progress" aria-hidden="true" />
       </div>
-      <main id="main" tabIndex={-1}>
-        <Hero t={t} go={go} />
-        <Discovery t={t} go={go} />
-        <Products t={t} language={language} go={go} />
-        <Experiences t={t} go={go} />
-        <Editorial t={t} go={go} />
-        <Journey t={t} go={go} />
-      </main>
+      {isStore ? (
+        <StorePage t={t} language={language} go={go} />
+      ) : (
+        <main id="main" tabIndex={-1}>
+          <Hero t={t} go={go} />
+          <Discovery t={t} go={go} />
+          <Products t={t} language={language} go={go} />
+          <Experiences t={t} go={go} />
+          <Editorial t={t} go={go} />
+          <Journey t={t} go={go} />
+        </main>
+      )}
       <Footer t={t} go={go} />
       <button
         className="chat-launcher"

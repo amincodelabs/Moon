@@ -10,7 +10,7 @@ import {
   SectionHeading,
   type Navigate,
 } from "./Primitives";
-function ProductCard({
+export function ProductCard({
   product,
   t,
   language,

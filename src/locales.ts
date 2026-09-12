@@ -82,6 +82,7 @@ const fa = {
   selectedTitle: "همراهان شب‌های پرستاره",
   selectedBody: "انتخاب‌هایی برای شروع و ادامه‌ی ماجراجویی نجومی شما.",
   allProducts: "کاوش در فروشگاه",
+  cart: "سبد خرید",
   sampleLabel: "پیش‌نمایش مجموعه · محصولات، قیمت‌ها و برنامه‌ها نمونه‌اند",
   telescopeName: "تلسکوپ شکستی ۹۰ میلی‌متری",
   telescopeDetail: "یک شروع روشن برای رصد ماه و سیاره‌ها",
@@ -252,6 +253,7 @@ const en: Record<keyof typeof fa, string> = {
   selectedBody:
     "Thoughtful picks for the next chapter of your astronomy journey.",
   allProducts: "Explore the store",
+  cart: "Cart",
   sampleLabel: "Collection preview · Sample products, prices, and programs",
   telescopeName: "90 mm refractor telescope",
   telescopeDetail: "A bright beginning for lunar and planetary observing",

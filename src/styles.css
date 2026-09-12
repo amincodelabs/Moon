@@ -198,6 +198,114 @@ a:hover .direction-arrow {
 .icon-button:hover {
   background: var(--line);
 }
+
+.store-page {
+  min-height: calc(100vh - 160px);
+}
+.store-hero {
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  padding-block: 76px 54px;
+  position: relative;
+  overflow: hidden;
+}
+.store-hero h1 {
+  max-width: 680px;
+  margin: 0 0 16px;
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: 1.2;
+  font-weight: 600;
+}
+.store-hero p:last-child {
+  color: var(--muted);
+  max-width: 460px;
+  margin: 0;
+}
+.store-hero-orbit {
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0 0 80px color-mix(in srgb, var(--gold) 12%, transparent);
+  transform: rotate(-12deg);
+}
+.store-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.store-toolbar h2 {
+  margin: 0;
+}
+.store-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.store-cart:hover {
+  border-color: var(--gold);
+  color: var(--gold-text);
+  transform: translateY(-2px);
+}
+.store-cart b {
+  min-width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #18202c;
+  font-size: 11px;
+}
+.store-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+.store-filter {
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.store-filter:hover,
+.store-filter.is-active {
+  color: var(--text);
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.store-grid {
+  padding-top: 0;
+}
+
+@media (max-width: 700px) {
+  .store-hero {
+    min-height: 300px;
+    padding-block: 52px 34px;
+  }
+  .store-hero-orbit {
+    position: absolute;
+    inset-inline-end: -80px;
+    opacity: 0.35;
+  }
+  .store-toolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+}
 .sr-only {
   position: absolute;
   width: 1px;
