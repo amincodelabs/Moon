@@ -152,22 +152,22 @@ export default function StoreApp() {
     }
     const complete = searchHintText === target;
     const empty = searchHintText.length === 0;
-    const delay = complete
-      ? 1200
-      : empty && searchHintDeleting
+    const delay = searchHintDeleting
+      ? empty
         ? 320
-        : searchHintDeleting
-          ? 28
-          : 45;
+        : 28
+      : complete
+        ? 1200
+        : 45;
     const timer = window.setTimeout(() => {
-      if (complete) {
-        setSearchHintDeleting(true);
-      } else if (searchHintDeleting) {
+      if (searchHintDeleting) {
         setSearchHintText((current) => current.slice(0, -1));
         if (searchHintText.length === 1) {
           setSearchHintDeleting(false);
           setSearchHintIndex((current) => (current + 1) % searchHints.length);
         }
+      } else if (complete) {
+        setSearchHintDeleting(true);
       } else {
         setSearchHintText(target.slice(0, searchHintText.length + 1));
       }
