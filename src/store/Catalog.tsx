@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -33,6 +33,7 @@ export function Catalog() {
   const [banner, setBanner] = useState(0);
   const [bannerPaused, setBannerPaused] = useState(false);
   const [page, setPage] = useState(1);
+  const collectionRails = useRef<Record<string, HTMLDivElement | null>>({});
   useEffect(() => {
     const params = new URLSearchParams(path.split("?")[1]);
     const slugCategory =
@@ -236,7 +237,40 @@ export function Catalog() {
                     </div>
                     <p>{text(collection.body)}</p>
                   </div>
-                  <div className="shop-product-grid">
+                  {collectionProducts.length > 3 && (
+                    <div className="shop-collection-nav">
+                      <button
+                        type="button"
+                        aria-label={`${tr("Previous", "قبلی")}: ${text(collection.title)}`}
+                        onClick={() =>
+                          collectionRails.current[collection.id]?.scrollBy({
+                            left: -360,
+                            behavior: "smooth",
+                          })
+                        }
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`${tr("Next", "بعدی")}: ${text(collection.title)}`}
+                        onClick={() =>
+                          collectionRails.current[collection.id]?.scrollBy({
+                            left: 360,
+                            behavior: "smooth",
+                          })
+                        }
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  )}
+                  <div
+                    className="shop-product-grid shop-collection-rail"
+                    ref={(node) => {
+                      collectionRails.current[collection.id] = node;
+                    }}
+                  >
                     {collectionProducts.map((product) => (
                       <ProductTile key={product.id} product={product} />
                     ))}

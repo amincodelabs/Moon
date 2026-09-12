@@ -84,7 +84,10 @@ export function Gallery({
       <div className="shop-gallery-controls">
         <button
           aria-label={`${tr("Previous image", "تصویر قبلی")}: ${text(product.name)}`}
-          onClick={() => move(-1)}
+          onClick={(event) => {
+            event.stopPropagation();
+            move(-1);
+          }}
         >
           <ChevronLeft size={17} />
         </button>
@@ -93,7 +96,10 @@ export function Gallery({
         </span>
         <button
           aria-label={`${tr("Next image", "تصویر بعدی")}: ${text(product.name)}`}
-          onClick={() => move(1)}
+          onClick={(event) => {
+            event.stopPropagation();
+            move(1);
+          }}
         >
           <ChevronRight size={17} />
         </button>
@@ -109,7 +115,10 @@ export function WishButton({ id }: { id: string }) {
       className={`shop-icon ${saved ? "saved" : ""}`}
       aria-label={tr("Save to wishlist", "ذخیره در علاقه‌مندی‌ها")}
       aria-pressed={saved}
-      onClick={() => wish(id)}
+      onClick={(event) => {
+        event.stopPropagation();
+        wish(id);
+      }}
     >
       <Heart size={19} fill={saved ? "currentColor" : "none"} />
     </button>
@@ -140,7 +149,10 @@ export function AddButton({
         <button
           type="button"
           aria-label={`${tr("Decrease quantity", "کاهش تعداد")}: ${text(product.name)}`}
-          onClick={() => quantity(product.id, variant, count - 1)}
+          onClick={(event) => {
+            event.stopPropagation();
+            quantity(product.id, variant, count - 1);
+          }}
         >
           <Minus size={16} />
         </button>
@@ -151,7 +163,10 @@ export function AddButton({
           type="button"
           disabled={limit}
           aria-label={`${tr("Increase quantity", "افزایش تعداد")}: ${text(product.name)}`}
-          onClick={() => quantity(product.id, variant, count + 1)}
+          onClick={(event) => {
+            event.stopPropagation();
+            quantity(product.id, variant, count + 1);
+          }}
         >
           <Plus size={16} />
         </button>
@@ -163,7 +178,8 @@ export function AddButton({
       type="button"
       className="shop-button"
       disabled={limit}
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation();
         add(product.id, variant);
         notify("Added to your bag", "به سبد خرید اضافه شد");
       }}
@@ -178,14 +194,26 @@ export function AddButton({
   );
 }
 export function ProductTile({ product }: { product: Product }) {
-  const { text, money, tr, state } = useShop();
+  const { text, money, tr, state, navigate } = useShop();
   const reviews = state.reviews.filter((r) => r.productId === product.id);
   const rating = (
     (5 + reviews.reduce((n, r) => n + r.rating, 0)) /
     (reviews.length + 1)
   ).toFixed(1);
   return (
-    <article className="shop-product">
+    <article
+      className="shop-product"
+      role="link"
+      tabIndex={0}
+      aria-label={text(product.name)}
+      onClick={() => navigate(`/store/product/${product.id}`)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          navigate(`/store/product/${product.id}`);
+        }
+      }}
+    >
       <div className="shop-product-media">
         <Gallery product={product} />
         <div className="shop-product-badges">
@@ -206,11 +234,7 @@ export function ProductTile({ product }: { product: Product }) {
               : tr("Out of stock", "ناموجود")}
           </span>
         </span>
-        <h3>
-          <ShopLink to={`/store/product/${product.id}`}>
-            {text(product.name)}
-          </ShopLink>
-        </h3>
+        <h3>{text(product.name)}</h3>
         <div className="shop-price">
           {product.oldPrice && <del>{money(product.oldPrice)}</del>}
           <strong>{money(product.price)}</strong>
@@ -220,12 +244,6 @@ export function ProductTile({ product }: { product: Product }) {
             <Star size={13} fill="currentColor" />
             {rating} <small>{tr("Demo rating", "امتیاز نمایشی")}</small>
           </span>
-          <ShopLink
-            to={`/store/product/${product.id}`}
-            className="shop-text-link"
-          >
-            {tr("Discover", "مشاهده")} ↗
-          </ShopLink>
         </div>
         <AddButton product={product} />
       </div>
