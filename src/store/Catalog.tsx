@@ -201,19 +201,14 @@ export function Catalog() {
                 : tr("Explore the store", "کاوش در فروشگاه")}
             </h2>
           </div>
-          <p>
-            {isResultsPage
-              ? searchQuery
-                ? `${tr("Showing results for", "نتایج برای")} “${searchQuery}”`
-                : tr(
-                    "Refine your view with filters and sorting.",
-                    "با فیلترها و مرتب‌سازی، انتخاب دقیق‌تری داشته باشید.",
-                  )
-              : tr(
-                  "From your first glimpse to your next horizon.",
-                  "از اولین نگاه تا افق بعدی شما.",
-                )}
-          </p>
+          {!isResultsPage && (
+            <p>
+              {tr(
+                "From your first glimpse to your next horizon.",
+                "از اولین نگاه تا افق بعدی شما.",
+              )}
+            </p>
+          )}
         </div>
         {!isResultsPage && productCollections.length > 0 && (
           <div className="shop-merchandising">
@@ -290,12 +285,6 @@ export function Catalog() {
             </p>
             <h3>{tr("All products", "همه محصولات")}</h3>
           </div>
-          <p>
-            {tr(
-              "Filter by category, price, brand, or availability, then sort your matches.",
-              "با دسته‌بندی، قیمت، برند یا موجودی فیلتر کنید و نتایج را مرتب کنید.",
-            )}
-          </p>
         </div>
         <div className="shop-catalog-layout">
           <aside className="shop-filter-panel">
