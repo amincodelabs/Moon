@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -30,6 +30,14 @@ export function Catalog() {
   const [available, setAvailable] = useState(false);
   const [sort, setSort] = useState("selected");
   const [banner, setBanner] = useState(0);
+  const [bannerPaused, setBannerPaused] = useState(false);
+  useEffect(() => {
+    if (bannerPaused) return;
+    const timer = window.setInterval(() => {
+      setBanner((current) => (current + 1) % bannerSlides.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [bannerPaused]);
   const collection = params.get("collection") ?? "selected";
   let items = catalog.filter(
     (p) =>
@@ -54,6 +62,14 @@ export function Catalog() {
         className="shop-editorial-hero"
         aria-roledescription="carousel"
         aria-label={tr("Store highlights", "ویترین فروشگاه")}
+        aria-live="polite"
+        onMouseEnter={() => setBannerPaused(true)}
+        onMouseLeave={() => setBannerPaused(false)}
+        onFocus={() => setBannerPaused(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget))
+            setBannerPaused(false);
+        }}
       >
         <img
           key={bannerSlides[banner].image}
