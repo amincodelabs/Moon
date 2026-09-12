@@ -15,6 +15,10 @@ import {
   type Line,
   catalog,
   productById,
+  fulfillmentLabel,
+  advanceShipment,
+  resolveReturn,
+  returnOutcome,
 } from "./model";
 import { ShopLink, Empty, ProductTile, Breakdown } from "./ui";
 
@@ -402,7 +406,7 @@ export function Receipt({ order }: { order: Order }) {
   );
 }
 export function OrderDetails({ order }: { order: Order }) {
-  const { tr, text, money } = useShop();
+  const { tr, text, money, state, update } = useShop();
   return (
     <>
       <div className="shop-section-heading">
@@ -410,13 +414,7 @@ export function OrderDetails({ order }: { order: Order }) {
           <p className="shop-overline">{tr("YOUR ORDER", "سفارش شما")}</p>
           <h1>{order.id}</h1>
         </div>
-        <span className="shop-tag">
-          {order.status === "paid"
-            ? tr("Paid · Preparing", "پرداخت‌شده · در حال آماده‌سازی")
-            : order.status === "pending"
-              ? tr("Awaiting payment", "در انتظار پرداخت")
-              : tr("Payment unsuccessful", "پرداخت ناموفق")}
-        </span>
+        <span className="shop-tag">{text(fulfillmentLabel(order))}</span>
       </div>
       <div className="shop-checkout-layout">
         <section className="shop-panel">
@@ -454,13 +452,98 @@ export function OrderDetails({ order }: { order: Order }) {
             {order.address.postal}
           </p>
           <h3>{tr("Shipment tracking", "پیگیری ارسال")}</h3>
-          <p>
-            {order.tracking ??
-              tr(
-                "Your order is being prepared. A tracking number will appear when dispatched; no real shipment is created in this demo.",
-                "سفارش در حال آماده‌سازی است. کد رهگیری پس از ارسال نمایش داده می‌شود؛ در نسخه نمایشی ارسال واقعی انجام نمی‌شود.",
+          {order.status === "paid" && (
+            <ol className="shop-shipment-steps">
+              {(["preparing", "shipped", "delivered"] as const).map(
+                (step, index) => (
+                  <li
+                    key={step}
+                    aria-current={
+                      (order.fulfillment ?? "preparing") === step
+                        ? "step"
+                        : undefined
+                    }
+                  >
+                    {index + 1} ·{" "}
+                    {tr(
+                      ["Preparing", "Shipped", "Delivered"][index],
+                      ["آماده‌سازی", "ارسال‌شده", "تحویل‌شده"][index],
+                    )}
+                  </li>
+                ),
               )}
+            </ol>
+          )}
+          <p>
+            {order.status !== "paid"
+              ? tr(
+                  "Shipment begins after payment.",
+                  "ارسال پس از پرداخت آغاز می‌شود.",
+                )
+              : (order.tracking ??
+                tr(
+                  "Your order is being prepared. A tracking number will appear when dispatched; no real shipment is created in this demo.",
+                  "سفارش در حال آماده‌سازی است. کد رهگیری پس از ارسال نمایش داده می‌شود؛ در نسخه نمایشی ارسال واقعی انجام نمی‌شود.",
+                ))}
           </p>
+          {order.shippedAt && (
+            <p>
+              {tr("Dispatched", "تاریخ ارسال")}:{" "}
+              {new Date(order.shippedAt).toLocaleDateString(
+                tr("en-US", "fa-IR"),
+              )}
+            </p>
+          )}
+          {order.deliveredAt && (
+            <p>
+              {tr("Delivered", "تاریخ تحویل")}:{" "}
+              {new Date(order.deliveredAt).toLocaleDateString(
+                tr("en-US", "fa-IR"),
+              )}
+            </p>
+          )}
+          {order.status === "paid" && order.fulfillment !== "delivered" && (
+            <details className="shop-demo-scenarios">
+              <summary>
+                {tr("Demo shipment scenario", "سناریوی نمایشی ارسال")}
+              </summary>
+              <p>
+                {tr(
+                  "Preview the next shipment stage. Tracking is a sample; no parcel is sent.",
+                  "مرحله بعدی ارسال را ببینید. رهگیری نمونه است؛ بسته‌ای ارسال نمی‌شود.",
+                )}
+              </p>
+              <button
+                type="button"
+                className="shop-secondary"
+                onClick={() =>
+                  update((s) => ({
+                    ...s,
+                    orders: s.orders.map((o) =>
+                      o.id === order.id ? advanceShipment(o) : o,
+                    ),
+                  }))
+                }
+              >
+                {order.fulfillment === "shipped"
+                  ? tr("Simulate delivery", "شبیه‌سازی تحویل")
+                  : tr("Simulate dispatch", "شبیه‌سازی ارسال")}
+              </button>
+            </details>
+          )}
+          {state.returns
+            .filter((r) => r.orderId === order.id)
+            .map((r) => (
+              <section key={r.id} className="shop-order-return">
+                <h3>
+                  {tr("Return request", "درخواست مرجوعی")} · {r.id}
+                </h3>
+                <p>{text(returnOutcome(r))}</p>
+                <ShopLink to={`/store/account/returns?order=${order.id}`}>
+                  {tr("View return and refund", "مشاهده مرجوعی و بازپرداخت")}
+                </ShopLink>
+              </section>
+            ))}
           <p>
             {order.delivery === "express"
               ? tr("Express · 1–2 business days", "سریع · ۱ تا ۲ روز کاری")
@@ -667,12 +750,53 @@ export function Returns() {
                   : tr("Not applicable", "ندارد")}
             </p>
             <p>
-              {tr("Outcome", "نتیجه")}:{" "}
-              {tr(
-                "No decision yet. Demo requests remain pending.",
-                "هنوز تصمیمی ثبت نشده است. درخواست نمایشی در انتظار می‌ماند.",
-              )}
+              {tr("Outcome", "نتیجه")}: {text(returnOutcome(r))}
             </p>
+            {(r.status === "submitted" ||
+              (r.status === "approved" && r.refund === "pending")) && (
+              <details className="shop-demo-scenarios">
+                <summary>
+                  {tr("Demo return scenario", "سناریوی نمایشی مرجوعی")}
+                </summary>
+                <p>
+                  {tr(
+                    "Preview a review outcome. No real refund is issued.",
+                    "نتیجه بررسی را شبیه‌سازی کنید. بازپرداخت واقعی انجام نمی‌شود.",
+                  )}
+                </p>
+                <div className="shop-inline">
+                  {(r.status === "submitted"
+                    ? (["approve", "decline"] as const)
+                    : (["refund"] as const)
+                  ).map((action) => (
+                    <button
+                      type="button"
+                      key={action}
+                      className="shop-secondary"
+                      onClick={() =>
+                        update((s) => ({
+                          ...s,
+                          returns: s.returns.map((request) =>
+                            request.id === r.id
+                              ? resolveReturn(request, action)
+                              : request,
+                          ),
+                        }))
+                      }
+                    >
+                      {action === "approve"
+                        ? tr("Simulate approval", "شبیه‌سازی تأیید")
+                        : action === "decline"
+                          ? tr("Simulate decline", "شبیه‌سازی رد")
+                          : tr(
+                              "Simulate refund completion",
+                              "شبیه‌سازی تکمیل بازپرداخت",
+                            )}
+                    </button>
+                  ))}
+                </div>
+              </details>
+            )}
           </article>
         ))}
         {!state.returns.length && (
@@ -827,13 +951,7 @@ export function Account({
                     {o.items.reduce((n, l) => n + l.quantity, 0)}{" "}
                     {tr("items", "کالا")}
                   </span>
-                  <span>
-                    {o.status === "paid"
-                      ? tr("Paid · Preparing", "پرداخت‌شده · آماده‌سازی")
-                      : o.status === "pending"
-                        ? tr("Awaiting payment", "در انتظار پرداخت")
-                        : tr("Payment failed", "پرداخت ناموفق")}
-                  </span>
+                  <span>{text(fulfillmentLabel(o))}</span>
                   <span>↗</span>
                 </ShopLink>
               ))}

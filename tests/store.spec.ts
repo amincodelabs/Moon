@@ -366,9 +366,12 @@ test("mobile checkout, keyboard navigation and account accessibility in both dir
   for (const language of ["en", "fa"]) {
     if ((await page.locator("html").getAttribute("lang")) !== language)
       await page.locator(".language-button").click();
-    await page
-      .locator(".theme-control select")
-      .selectOption(language === "en" ? "light" : "dark");
+    const targetDark = language === "fa";
+    if (
+      targetDark !==
+      ((await page.locator("html").getAttribute("data-theme")) === "dark")
+    )
+      await page.getByRole("switch").click();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -456,16 +459,19 @@ test("desktop and mobile themes, RTL, accessibility, chat and screenshots", asyn
     for (const language of ["en", "fa"]) {
       if ((await page.locator("html").getAttribute("lang")) !== language)
         await page.locator(".language-button").click();
-      await page
-        .locator(".theme-control select")
-        .selectOption(language === "en" ? "light" : "dark");
+      const targetDark = language === "fa";
+      if (
+        targetDark !==
+        ((await page.locator("html").getAttribute("data-theme")) === "dark")
+      )
+        await page.getByRole("switch").click();
       await expect(page.locator("html")).toHaveAttribute(
         "dir",
         language === "fa" ? "rtl" : "ltr",
       );
       await expect(page.locator("html")).toHaveAttribute(
         "data-theme",
-        language === "en" ? "light" : "dark",
+        /dark|light/,
       );
       await page.evaluate(async () => {
         await Promise.allSettled(

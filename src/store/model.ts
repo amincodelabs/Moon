@@ -5,6 +5,8 @@ export type Text = { en: string; fa: string };
 export const words = (en: string, fa: string): Text => ({ en, fa });
 export type Product = {
   id: string;
+  arrivedAt: string;
+  compatibleIds: string[];
   name: Text;
   description: Text;
   category: string;
@@ -28,6 +30,8 @@ export const categories = [
 export const catalog: Product[] = [
   {
     id: "refractor",
+    arrivedAt: "2026-01-10",
+    compatibleIds: ["eyepiece", "widefield", "redlight"],
     name: words("Horizon 80 Refractor", "تلسکوپ شکستی هورایزن ۸۰"),
     category: "1",
     brand: "AvaStar",
@@ -56,6 +60,8 @@ export const catalog: Product[] = [
   },
   {
     id: "binoculars",
+    arrivedAt: "2026-02-20",
+    compatibleIds: ["redlight"],
     name: words("Atlas 10×50 Binoculars", "دوربین دوچشمی اطلس ۱۰×۵۰"),
     category: "2",
     brand: "Atlas",
@@ -80,6 +86,8 @@ export const catalog: Product[] = [
   },
   {
     id: "eyepiece",
+    arrivedAt: "2026-04-01",
+    compatibleIds: ["refractor", "zenith"],
     name: words("Orbit 12 mm Eyepiece", "چشمی اوربیت ۱۲ میلی‌متری"),
     category: "3",
     brand: "Orbit",
@@ -104,6 +112,8 @@ export const catalog: Product[] = [
   },
   {
     id: "zenith",
+    arrivedAt: "2026-07-10",
+    compatibleIds: ["eyepiece", "widefield", "redlight"],
     name: words("Zenith 90 Explorer", "تلسکوپ زنیت ۹۰ اکسپلورر"),
     category: "1",
     brand: "AvaStar",
@@ -128,6 +138,8 @@ export const catalog: Product[] = [
   },
   {
     id: "scout",
+    arrivedAt: "2026-06-05",
+    compatibleIds: ["redlight"],
     name: words("Atlas Scout 8×42", "دوربین اطلس اسکات ۸×۴۲"),
     category: "2",
     brand: "Atlas",
@@ -153,6 +165,8 @@ export const catalog: Product[] = [
   },
   {
     id: "widefield",
+    arrivedAt: "2026-05-12",
+    compatibleIds: ["refractor", "zenith"],
     name: words("Orbit 25 mm Widefield", "چشمی میدان‌باز اوربیت ۲۵"),
     category: "3",
     brand: "Orbit",
@@ -174,6 +188,8 @@ export const catalog: Product[] = [
   },
   {
     id: "redlight",
+    arrivedAt: "2026-09-01",
+    compatibleIds: ["refractor", "zenith", "binoculars", "scout"],
     name: words("Orbit Redlight Torch", "چراغ قرمز اوربیت"),
     category: "3",
     brand: "Orbit",
@@ -311,6 +327,9 @@ export type Order = {
   status: "pending" | "paid" | "failed";
   totals: Totals;
   tracking?: string;
+  fulfillment?: "preparing" | "shipped" | "delivered";
+  shippedAt?: string;
+  deliveredAt?: string;
 };
 export type ReturnRequest = {
   id: string;
@@ -319,6 +338,7 @@ export type ReturnRequest = {
   reason: string;
   status: "submitted" | "approved" | "declined";
   refund: "pending" | "completed" | "none";
+  resolvedAt?: string;
 };
 export type Review = {
   productId: string;
@@ -354,6 +374,99 @@ const initial: StoreState = {
   useCoins: false,
 };
 export const productById = (id: string) => catalog.find((p) => p.id === id)!;
+export function normalizeSearch(value: string) {
+  return value
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)))
+    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک")
+    .replace(/[×x]/g, " ")
+    .replace(/[\u200c\u200f]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+export function fulfillmentLabel(order: Order): Text {
+  if (order.status !== "paid")
+    return order.status === "failed"
+      ? words("Payment failed", "پرداخت ناموفق")
+      : words("Awaiting payment", "در انتظار پرداخت");
+  return order.fulfillment === "delivered"
+    ? words("Paid · Delivered", "پرداخت‌شده · تحویل‌شده")
+    : order.fulfillment === "shipped"
+      ? words("Paid · Shipped", "پرداخت‌شده · ارسال‌شده")
+      : words("Paid · Preparing", "پرداخت‌شده · در حال آماده‌سازی");
+}
+export function advanceShipment(order: Order): Order {
+  if (order.status !== "paid" || order.fulfillment === "delivered")
+    return order;
+  return order.fulfillment === "shipped"
+    ? {
+        ...order,
+        fulfillment: "delivered",
+        deliveredAt: new Date().toISOString(),
+      }
+    : {
+        ...order,
+        fulfillment: "shipped",
+        tracking: `DEMO-${order.id}`,
+        shippedAt: new Date().toISOString(),
+      };
+}
+export function resolveReturn(
+  request: ReturnRequest,
+  action: "approve" | "decline" | "refund",
+): ReturnRequest {
+  if (request.status === "submitted" && action !== "refund")
+    return {
+      ...request,
+      status: action === "approve" ? "approved" : "declined",
+      refund: action === "approve" ? "pending" : "none",
+      resolvedAt: new Date().toISOString(),
+    };
+  if (
+    request.status === "approved" &&
+    request.refund === "pending" &&
+    action === "refund"
+  )
+    return {
+      ...request,
+      refund: "completed",
+      resolvedAt: new Date().toISOString(),
+    };
+  return request;
+}
+export function returnOutcome(request: ReturnRequest): Text {
+  if (request.status === "declined")
+    return words(
+      "Request declined after review; no refund is due.",
+      "درخواست پس از بررسی رد شد؛ بازپرداختی تعلق نمی‌گیرد.",
+    );
+  if (request.refund === "completed")
+    return words(
+      "Return accepted and refund completed in this demo. No money was transferred.",
+      "مرجوعی پذیرفته و بازپرداخت نمایشی تکمیل شد. پولی منتقل نشده است.",
+    );
+  if (request.status === "approved")
+    return words(
+      "Return accepted. Refund is being processed.",
+      "مرجوعی پذیرفته شد. بازپرداخت در حال پردازش است.",
+    );
+  return words(
+    "Your request is awaiting review.",
+    "درخواست شما در انتظار بررسی است.",
+  );
+}
+export function matchesSearch(product: Product, query: string) {
+  const haystack = normalizeSearch(
+    `${product.name.en} ${product.name.fa} ${product.description.en} ${product.description.fa} ${product.brand}`,
+  );
+  return normalizeSearch(query)
+    .split(" ")
+    .filter(Boolean)
+    .every((term) => haystack.includes(term));
+}
 export function calculate(state: StoreState, delivery?: string): Totals {
   const subtotal = state.cart.reduce(
     (n, l) => n + productById(l.productId).price * l.quantity,

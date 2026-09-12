@@ -385,6 +385,55 @@ a:hover .direction-arrow {
   gap: 10px;
   flex-shrink: 0;
 }
+.explore-page {
+  padding-block: 30px 70px;
+}
+.explore-page > nav {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.explore-page > header {
+  max-width: 800px;
+  margin-bottom: 30px;
+}
+.explore-page h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.explore-page p {
+  color: var(--muted);
+  line-height: 2;
+}
+.explore-page > img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 35vw, 430px);
+  object-fit: cover;
+  border-radius: 16px;
+}
+.explore-reading {
+  max-width: 760px;
+  margin: 40px auto 0;
+}
+.explore-reading section {
+  margin-bottom: 32px;
+}
+.explore-reading h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.explore-reading > a {
+  width: fit-content;
+}
+.explore-related {
+  display: grid;
+  gap: 14px;
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
 .brand-symbol {
   border: 1px solid #b28e5660;
   border-radius: 50%;

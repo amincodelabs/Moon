@@ -208,6 +208,7 @@ export function ProductTile({ product }: { product: Product }) {
       aria-label={text(product.name)}
       onClick={() => navigate(`/store/product/${product.id}`)}
       onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           navigate(`/store/product/${product.id}`);

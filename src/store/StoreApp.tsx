@@ -16,6 +16,7 @@ import { Modal } from "../components/Primitives";
 import { StoreContext, useShop } from "./context";
 import { promotion, useStore, catalog } from "./model";
 import { Catalog, ProductDetails } from "./Catalog";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { Account, Auth } from "./Account";
 import { Cart, Checkout, Payment } from "./Purchase";
 import { Empty, ProductTile, ShopLink } from "./ui";
@@ -135,7 +136,10 @@ export default function StoreApp() {
     setSearchQuery(new URLSearchParams(next.split("?")[1]).get("q") ?? "");
   };
   useEffect(() => {
-    const pop = () => setPath(location.pathname + location.search);
+    const pop = () => {
+      setPath(location.pathname + location.search);
+      setSearchQuery(new URLSearchParams(location.search).get("q") ?? "");
+    };
     addEventListener("popstate", pop);
     return () => removeEventListener("popstate", pop);
   }, []);
@@ -352,6 +356,7 @@ export default function StoreApp() {
           tabIndex={-1}
           className={`shop-main ${page === "catalog" || page === "search" || page === "category" ? "shop-main-catalog" : ""} ${page === "search" || page === "category" ? "shop-main-results" : ""}`}
         >
+          <Breadcrumbs />
           {page === "catalog" ? (
             <Catalog />
           ) : page === "search" || page === "category" ? (

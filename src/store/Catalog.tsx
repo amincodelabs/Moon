@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { CollectionRail } from "./CollectionRail";
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,7 +12,13 @@ import {
 } from "lucide-react";
 import { useShop } from "./context";
 import { SelectMenu } from "./SelectMenu";
-import { bannerSlides, catalog, categories, productCollections } from "./model";
+import {
+  bannerSlides,
+  catalog,
+  categories,
+  productCollections,
+  matchesSearch,
+} from "./model";
 import {
   ProductTile,
   ShopLink,
@@ -37,7 +44,6 @@ export function Catalog() {
   const [banner, setBanner] = useState(0);
   const [bannerPaused, setBannerPaused] = useState(false);
   const [page, setPage] = useState(1);
-  const collectionRails = useRef<Record<string, HTMLDivElement | null>>({});
   useEffect(() => {
     const params = new URLSearchParams(path.split("?")[1]);
     const slugCategory =
@@ -64,13 +70,14 @@ export function Catalog() {
       p.price <= price &&
       p.price >= minPrice &&
       (!available || p.stock > 0) &&
-      `${text(p.name)} ${p.brand} ${text(p.description)}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase().trim()),
+      matchesSearch(p, searchQuery),
   );
   if (sort === "low") items = [...items].sort((a, b) => a.price - b.price);
   if (sort === "high") items = [...items].sort((a, b) => b.price - a.price);
-  if (sort === "new") items = [...items].reverse();
+  if (sort === "new")
+    items = [...items].sort(
+      (a, b) => Date.parse(b.arrivedAt) - Date.parse(a.arrivedAt),
+    );
   if (sort === "best") items = [...items].sort((a, b) => b.sold - a.sold);
   useEffect(
     () => setPage(1),
@@ -237,44 +244,11 @@ export function Catalog() {
                     </div>
                     <p>{text(collection.body)}</p>
                   </div>
-                  {collectionProducts.length > 3 && (
-                    <div className="shop-collection-nav">
-                      <button
-                        type="button"
-                        aria-label={`${tr("Previous", "قبلی")}: ${text(collection.title)}`}
-                        onClick={() =>
-                          collectionRails.current[collection.id]?.scrollBy({
-                            left: -360,
-                            behavior: "smooth",
-                          })
-                        }
-                      >
-                        <ChevronLeft size={18} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={`${tr("Next", "بعدی")}: ${text(collection.title)}`}
-                        onClick={() =>
-                          collectionRails.current[collection.id]?.scrollBy({
-                            left: 360,
-                            behavior: "smooth",
-                          })
-                        }
-                      >
-                        <ChevronRight size={18} />
-                      </button>
-                    </div>
-                  )}
-                  <div
-                    className="shop-product-grid shop-collection-rail"
-                    ref={(node) => {
-                      collectionRails.current[collection.id] = node;
-                    }}
-                  >
+                  <CollectionRail title={text(collection.title)}>
                     {collectionProducts.map((product) => (
                       <ProductTile key={product.id} product={product} />
                     ))}
-                  </div>
+                  </CollectionRail>
                 </section>
               );
             })}
@@ -769,12 +743,7 @@ export function ProductDetails({ id }: { id: string }) {
         </p>
         <div className="shop-product-grid">
           {catalog
-            .filter(
-              (q) =>
-                q.id !== id &&
-                q.category !== p.category &&
-                (p.category === "1" ? q.category === "3" : q.category === "1"),
-            )
+            .filter((q) => p.compatibleIds.includes(q.id))
             .map((q) => (
               <ProductTile key={q.id} product={q} />
             ))}
