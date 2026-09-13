@@ -275,7 +275,7 @@ export const productCollections = [
       "The instruments fellow explorers return to.",
       "ابزارهایی که همراهان آسمان دوباره انتخاب می‌کنند.",
     ),
-    productIds: ["binoculars", "refractor", "scout"],
+    productIds: ["binoculars", "refractor", "scout", "zenith", "redlight"],
   },
   {
     id: "selected",
@@ -284,7 +284,7 @@ export const productCollections = [
       "A considered edit for your next clear night.",
       "انتخابی دقیق برای شب صاف بعدی شما.",
     ),
-    productIds: ["zenith", "widefield", "eyepiece"],
+    productIds: ["zenith", "widefield", "eyepiece", "refractor", "scout"],
   },
   {
     id: "starters",
@@ -293,7 +293,13 @@ export const productCollections = [
       "A friendly first step into the night sky.",
       "اولین قدمی دلنشین به سوی آسمان شب.",
     ),
-    productIds: ["refractor", "binoculars", "widefield"],
+    productIds: [
+      "refractor",
+      "binoculars",
+      "widefield",
+      "redlight",
+      "eyepiece",
+    ],
   },
 ];
 export type Line = { productId: string; variant: number; quantity: number };
