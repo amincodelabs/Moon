@@ -569,12 +569,11 @@ export function ProductDetails({ id }: { id: string }) {
               </span>
             )}
           </div>
-          <p className="shop-stock">
-            ●{" "}
-            {p.stock
-              ? `${tr("In stock", "موجود")} · ${p.stock} ${tr("available", "عدد")}`
-              : tr("Currently unavailable", "فعلاً ناموجود")}
-          </p>
+          {!p.stock && (
+            <p className="shop-stock shop-stock-out">
+              {tr("Currently unavailable", "فعلاً ناموجود")}
+            </p>
+          )}
           <label>
             {tr("Model / finish", "مدل / رنگ")}
             <select

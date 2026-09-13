@@ -229,11 +229,11 @@ export function ProductTile({ product }: { product: Product }) {
       <div className="shop-product-copy">
         <span className="shop-overline">
           {product.brand}{" "}
-          <span className="shop-stock">
-            {product.stock
-              ? tr("In stock", "موجود")
-              : tr("Out of stock", "ناموجود")}
-          </span>
+          {!product.stock && (
+            <span className="shop-stock shop-stock-out">
+              {tr("Out of stock", "ناموجود")}
+            </span>
+          )}
         </span>
         <h3>{text(product.name)}</h3>
         <div className="shop-price">
