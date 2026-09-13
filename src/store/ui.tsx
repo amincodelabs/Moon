@@ -11,6 +11,7 @@ import { useState, type ReactNode } from "react";
 import { useShop } from "./context";
 import { type Product, type Totals } from "./model";
 import { useImageSwipe } from "../useImageSwipe";
+import { siteAsset, sitePath } from "../site";
 
 export function ShopLink({
   to,
@@ -28,7 +29,7 @@ export function ShopLink({
   return (
     <a
       {...props}
-      href={to}
+      href={sitePath(to)}
       className={className}
       onClick={(e) => {
         if (
@@ -75,7 +76,7 @@ export function Gallery({
   return (
     <div className={`shop-gallery ${large ? "large" : ""}`} {...swipe}>
       <img
-        src={`/images/${product.images[index]}-800.webp`}
+        src={siteAsset(`/images/${product.images[index]}-800.webp`)}
         alt={`${text(product.name)} — ${index + 1}`}
         width="800"
         height="600"

@@ -20,6 +20,7 @@ import { Breadcrumbs } from "./Breadcrumbs";
 import { Account, Auth } from "./Account";
 import { Cart, Checkout, Payment } from "./Purchase";
 import { Empty, ProductTile, ShopLink } from "./ui";
+import { appPath, siteAsset, sitePath } from "../site";
 import "./store.css";
 
 function Chat({ close }: { close: () => void }) {
@@ -106,7 +107,7 @@ function Chat({ close }: { close: () => void }) {
 export default function StoreApp() {
   const preferences = usePreferences();
   const store = useStore();
-  const [path, setPath] = useState(location.pathname + location.search);
+  const [path, setPath] = useState(appPath() + location.search);
   const [searchQuery, setSearchQuery] = useState(
     () => new URLSearchParams(location.search).get("q") ?? "",
   );
@@ -130,14 +131,14 @@ export default function StoreApp() {
   const tr = (en: string, fa: string) =>
     preferences.language === "fa" ? fa : en;
   const navigate = (next: string) => {
-    if (next !== location.pathname + location.search)
-      history.pushState(null, "", next);
+    if (next !== appPath() + location.search)
+      history.pushState(null, "", sitePath(next));
     setPath(next);
     setSearchQuery(new URLSearchParams(next.split("?")[1]).get("q") ?? "");
   };
   useEffect(() => {
     const pop = () => {
-      setPath(location.pathname + location.search);
+      setPath(appPath() + location.search);
       setSearchQuery(new URLSearchParams(location.search).get("q") ?? "");
     };
     addEventListener("popstate", pop);
@@ -241,11 +242,11 @@ export default function StoreApp() {
           )}
           <header className="shop-header">
             <a
-              href="/"
+              href={sitePath("/")}
               className="shop-brand"
               aria-label={tr("AvaStar home", "صفحه اصلی آوااستار")}
             >
-              <img src="/avastar-logo.svg" alt="AvaStar" />
+              <img src={siteAsset("/avastar-logo.svg")} alt="AvaStar" />
             </a>
             <div className="shop-header-search">
               <Search size={17} aria-hidden="true" />
@@ -417,9 +418,9 @@ export default function StoreApp() {
         </main>
         <footer className="shop-footer">
           <div>
-            <a href="/" className="shop-brand">
+            <a href={sitePath("/")} className="shop-brand">
               <img
-                src="/avastar-logo.svg"
+                src={siteAsset("/avastar-logo.svg")}
                 alt="AvaStar"
                 width="200"
                 height="84"
@@ -430,10 +431,10 @@ export default function StoreApp() {
             </p>
           </div>
           <nav aria-label={tr("Explore AvaStar", "کاوش آوااستار")}>
-            <a href="/">{tr("Home", "خانه")}</a>
-            <a href="/tours">{tr("Tours", "تورها")}</a>
-            <a href="/education">{tr("Education", "آموزش")}</a>
-            <a href="/magazine">{tr("Magazine", "مجله")}</a>
+            <a href={sitePath("/")}>{tr("Home", "خانه")}</a>
+            <a href={sitePath("/tours")}>{tr("Tours", "تورها")}</a>
+            <a href={sitePath("/education")}>{tr("Education", "آموزش")}</a>
+            <a href={sitePath("/magazine")}>{tr("Magazine", "مجله")}</a>
           </nav>
           <p className="shop-muted">
             {tr(

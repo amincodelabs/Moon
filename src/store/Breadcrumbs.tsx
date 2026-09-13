@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { useShop } from "./context";
 import { catalog, categories } from "./model";
 import { ShopLink } from "./ui";
+import { sitePath } from "../site";
 
 export function Breadcrumbs() {
   const { path, tr, text } = useShop();
@@ -66,7 +67,7 @@ export function Breadcrumbs() {
             {index > 0 && <ChevronRight size={12} aria-hidden="true" />}
             {crumb.to ? (
               crumb.to === "/" ? (
-                <a href="/">{crumb.label}</a>
+                <a href={sitePath("/")}>{crumb.label}</a>
               ) : (
                 <ShopLink to={crumb.to}>{crumb.label}</ShopLink>
               )

@@ -12,6 +12,7 @@ import { useShop } from "./context";
 import { calculate, productById, promotion, type Order } from "./model";
 import { Breakdown, Empty, ShopLink } from "./ui";
 import { AddressForm, Auth, Receipt } from "./Account";
+import { siteAsset } from "../site";
 
 export function CoinVoucher({ delivery }: { delivery?: string }) {
   const { tr, state, update, money } = useShop();
@@ -154,7 +155,7 @@ export function Cart() {
               >
                 <ShopLink to={`/store/product/${p.id}`}>
                   <img
-                    src={`/images/${p.images[0]}-400.webp`}
+                    src={siteAsset(`/images/${p.images[0]}-400.webp`)}
                     alt={text(p.name)}
                     width="140"
                     height="140"
@@ -412,7 +413,9 @@ export function Checkout() {
                   key={`${l.productId}-${l.variant}`}
                 >
                   <img
-                    src={`/images/${productById(l.productId).images[0]}-400.webp`}
+                    src={siteAsset(
+                      `/images/${productById(l.productId).images[0]}-400.webp`,
+                    )}
                     width="80"
                     height="80"
                     alt=""

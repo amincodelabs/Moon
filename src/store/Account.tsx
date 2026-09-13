@@ -21,6 +21,7 @@ import {
   returnOutcome,
 } from "./model";
 import { ShopLink, Empty, ProductTile, Breakdown } from "./ui";
+import { siteAsset } from "../site";
 
 export function Auth({
   mode = "login",
@@ -424,7 +425,9 @@ export function OrderDetails({ order }: { order: Order }) {
               key={`${l.productId}-${l.variant}`}
             >
               <img
-                src={`/images/${productById(l.productId).images[0]}-400.webp`}
+                src={siteAsset(
+                  `/images/${productById(l.productId).images[0]}-400.webp`,
+                )}
                 alt=""
                 width="80"
                 height="80"

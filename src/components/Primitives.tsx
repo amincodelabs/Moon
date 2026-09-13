@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { ArrowUpLeft, X } from "lucide-react";
 import type { Copy } from "../locales";
 import { routes, type RouteKey } from "../data";
+import { siteAsset, sitePath } from "../site";
 export type Navigate = (route: RouteKey) => void;
 export function DestinationLink({
   route,
@@ -17,7 +18,7 @@ export function DestinationLink({
   return (
     <a
       className={className}
-      href={routes[route]}
+      href={sitePath(routes[route])}
       onClick={(e) => {
         e.preventDefault();
         go(route);
@@ -47,11 +48,11 @@ export function Photo({
     <img
       key={name}
       className={className}
-      src={`/images/${name}-${hero ? 1600 : 800}.webp`}
+      src={siteAsset(`/images/${name}-${hero ? 1600 : 800}.webp`)}
       srcSet={
         hero
-          ? `/images/${name}-800.webp 800w, /images/${name}-1600.webp 1600w`
-          : `/images/${name}-400.webp 400w, /images/${name}-800.webp 800w`
+          ? `${siteAsset(`/images/${name}-800.webp`)} 800w, ${siteAsset(`/images/${name}-1600.webp`)} 1600w`
+          : `${siteAsset(`/images/${name}-400.webp`)} 400w, ${siteAsset(`/images/${name}-800.webp`)} 800w`
       }
       sizes={
         hero

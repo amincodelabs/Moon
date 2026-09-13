@@ -1,4 +1,5 @@
 import type { Language } from "../locales";
+import { siteAsset, sitePath } from "../site";
 
 export const explorePages = {
   education: {
@@ -119,7 +120,7 @@ export function ExplorePage({
   return (
     <article className="explore-page container">
       <nav aria-label={i ? "مسیر صفحه" : "Breadcrumb"}>
-        <a href="/">{i ? "خانه" : "Home"}</a> /{" "}
+        <a href={sitePath("/")}>{i ? "خانه" : "Home"}</a> /{" "}
         <span aria-current="page">{page.title[i]}</span>
       </nav>
       <header>
@@ -130,7 +131,7 @@ export function ExplorePage({
         <p>{page.intro[i]}</p>
       </header>
       <img
-        src={`/images/${page.image}-800.webp`}
+        src={siteAsset(`/images/${page.image}-800.webp`)}
         alt=""
         width="800"
         height="600"
@@ -152,7 +153,7 @@ export function ExplorePage({
           {Object.entries(explorePages)
             .filter(([key]) => key !== section)
             .map(([key, item]) => (
-              <a key={key} href={`/${key}`}>
+              <a key={key} href={sitePath(`/${key}`)}>
                 {item.title[i]} ↗
               </a>
             ))}
