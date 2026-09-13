@@ -52,9 +52,6 @@ export function ProductCard({
           >
             <ChevronLeft size={16} />
           </button>
-          <span aria-live="polite">
-            {format(index + 1)} / {format(product.images.length)}
-          </span>
           <button
             aria-label={`${t.next}: ${t[product.name]}`}
             onClick={() => setIndex((index + 1) % product.images.length)}
