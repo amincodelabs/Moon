@@ -211,32 +211,32 @@ html {
 }
 .hero-star:nth-child(5) {
   --star-x: 18%;
-  --star-y: 65%;
+  --star-y: 43%;
   --star-delay: -19s;
   --star-duration: 30s;
 }
 .hero-star:nth-child(6) {
   --star-x: 48%;
-  --star-y: 76%;
+  --star-y: 38%;
   --star-delay: -10s;
   --star-duration: 24s;
 }
 .hero-star:nth-child(7) {
   --star-x: 72%;
-  --star-y: 58%;
+  --star-y: 46%;
   --star-delay: -24s;
   --star-duration: 32s;
 }
 .hero-star:nth-child(8) {
   --star-x: 92%;
-  --star-y: 82%;
+  --star-y: 32%;
   --star-delay: -16s;
   --star-duration: 26s;
 }
 @keyframes star-flight {
   0% {
     opacity: 0;
-    transform: translate3d(-18vw, 16vh, 0) scale(0.65);
+    transform: translate3d(0, 10vh, 0) scale(0.65);
   }
   12%,
   72% {
@@ -244,7 +244,7 @@ html {
   }
   100% {
     opacity: 0;
-    transform: translate3d(118vw, -30vh, 0) scale(1.15);
+    transform: translate3d(12vw, -30vh, 0) scale(1.15);
   }
 }
 .hero-content > .eyebrow {
