@@ -17,6 +17,11 @@ export function Hero({ t, go }: { t: Copy; go: Navigate }) {
           <Photo name="hero" alt={t.heroAlt} hero className="hero-image" />
         </div>
         <div className="hero-shade" />
+        <div className="hero-stars" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, i) => (
+            <i key={i} className="hero-star" />
+          ))}
+        </div>
         <div className="hero-orbit" aria-hidden="true" />
         <svg
           className="hero-constellation"
