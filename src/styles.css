@@ -1152,14 +1152,6 @@ a:hover .direction-arrow {
     color 0.2s,
     box-shadow 0.2s;
 }
-.journey-node small {
-  position: absolute;
-  bottom: -5px;
-  inset-inline-end: -3px;
-  font: 10px monospace;
-  background: var(--bg);
-  padding: 4px 6px;
-}
 .journey-path strong {
   font-size: 14px;
   font-weight: 500;
@@ -1983,9 +1975,6 @@ a:hover .direction-arrow {
   }
   .journey-node > svg {
     width: 21px;
-  }
-  .journey-node small {
-    font-size: 8px;
   }
   .journey-path:before {
     top: 27px;
