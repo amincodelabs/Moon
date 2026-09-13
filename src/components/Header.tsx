@@ -1,18 +1,13 @@
-import { Globe2, Menu, Moon, Search, Sparkles, UserRound } from "lucide-react";
+import { Globe2, Menu, Moon, Search, Sun, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { Copy, Language } from "../locales";
 import type { Theme } from "../preferences";
 import { destinations } from "../data";
 import { DestinationLink, type Navigate } from "./Primitives";
 export function Brand({ t }: { t: Copy }) {
   return (
-    <a href="#" className="brand" aria-label={t.brand}>
-      <span className="brand-symbol" aria-hidden="true">
-        <Sparkles size={31} strokeWidth={1.25} />
-      </span>
-      <span>
-        <strong>{t.brand}</strong>
-        <small>AVASTAR</small>
-      </span>
+    <a href="/" className="brand" aria-label={t.brand}>
+      <img src="/avastar-logo.svg" alt={t.brand} width="200" height="84" />
     </a>
   );
 }
@@ -29,6 +24,16 @@ export function Preferences({
   theme: Theme;
   setTheme: (t: Theme) => void;
 }) {
+  const [systemDark, setSystemDark] = useState(
+    () => matchMedia("(prefers-color-scheme: dark)").matches,
+  );
+  useEffect(() => {
+    const media = matchMedia("(prefers-color-scheme: dark)");
+    const update = () => setSystemDark(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  const isDark = theme === "dark" || (theme === "system" && systemDark);
   return (
     <div className="preferences">
       <button
@@ -38,21 +43,27 @@ export function Preferences({
         onClick={() => setLanguage(language === "fa" ? "en" : "fa")}
       >
         <Globe2 size={17} />
-        <span>{t.language}</span>
+        <span>{language === "fa" ? "FA" : "EN"}</span>
       </button>
-      <label className="theme-control">
-        <Moon size={17} aria-hidden="true" />
-        <span className="sr-only">{t.theme}</span>
-        <select
-          aria-label={t.theme}
-          value={theme}
-          onChange={(e) => setTheme(e.target.value as Theme)}
+      <div className="theme-control">
+        <button
+          type="button"
+          className="theme-toggle"
+          role="switch"
+          aria-checked={isDark}
+          aria-label={`${t.theme}: ${isDark ? t.dark : t.light}`}
+          onClick={() => {
+            setTheme(isDark ? "light" : "dark");
+          }}
         >
-          <option value="dark">{t.dark}</option>
-          <option value="light">{t.light}</option>
-          <option value="system">{t.system}</option>
-        </select>
-      </label>
+          {isDark ? (
+            <Moon size={17} aria-hidden="true" />
+          ) : (
+            <Sun size={17} aria-hidden="true" />
+          )}
+          <span className="sr-only">{t.theme}</span>
+        </button>
+      </div>
     </div>
   );
 }

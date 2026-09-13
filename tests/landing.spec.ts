@@ -12,13 +12,11 @@ test("Persian destinations and honest future routes", async ({ page }) => {
         .getByRole("navigation", { name: "فهرست" })
         .getByRole("link", { name, exact: true }),
     ).toBeVisible();
-  await page.locator(".destination").first().click();
-  await expect(page.getByRole("dialog")).toContainText(
-    "این مسیر به‌زودی باز می‌شود",
+  await page.locator(".destination").nth(1).click();
+  await expect(page).toHaveURL(/\/education$/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "اولین شب",
   );
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(page.locator(".destination").first()).toBeFocused();
 });
 test("language changes content, metadata and persists", async ({ page }) => {
   await page.getByRole("button", { name: "Switch to English" }).click();
@@ -33,39 +31,32 @@ test("language changes content, metadata and persists", async ({ page }) => {
   await page.getByRole("button", { name: "تغییر زبان به فارسی" }).click();
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
 });
-test("all theme choices persist and system follows device", async ({
+test("theme toggle persists and follows the selected mode", async ({
   page,
 }) => {
-  const select = page.getByRole("combobox", { name: "نمایش" });
-  await select.selectOption("light");
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  const select = page.getByRole("switch");
+  const initial = await page.locator("html").getAttribute("data-theme");
+  await select.click();
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-theme",
+    initial === "dark" ? "light" : "dark",
+  );
   await page.reload();
-  await expect(select).toHaveValue("light");
-  await select.selectOption("system");
-  await page.emulateMedia({ colorScheme: "dark" });
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.emulateMedia({ colorScheme: "light" });
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await select.selectOption("dark");
-  await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-theme",
+    initial === "dark" ? "light" : "dark",
+  );
 });
-test("account demo, persistence and logout", async ({ page }) => {
+test("landing account opens the full store account page", async ({ page }) => {
   await page
     .getByRole("button", { name: "ورود / ثبت‌نام", exact: true })
     .click();
-  await expect(page.getByRole("dialog")).toContainText(
-    "این حساب فقط نمایشی است",
-  );
-  await page.getByRole("button", { name: "ورود به حساب نمایشی" }).click();
+  await expect(page).toHaveURL(/\/store\/account$/);
   await expect(
-    page.getByRole("button", { name: "حساب کاربری", exact: true }),
+    page.getByRole("heading", { name: "خوش آمدید", exact: true }),
   ).toBeVisible();
-  await page.reload();
-  await page.getByRole("button", { name: "حساب کاربری", exact: true }).click();
-  await page.getByRole("button", { name: "خروج از حساب نمایشی" }).click();
   await expect(
-    page.getByRole("button", { name: "ورود / ثبت‌نام", exact: true }),
+    page.getByRole("link", { name: "تازه‌واردید؟ حساب بسازید" }),
   ).toBeVisible();
 });
 test("campaign dismissal persists", async ({ page }) => {
@@ -104,7 +95,7 @@ test("mobile menu supports keyboard, traps focus, restores focus", async ({
   await expect(
     page.getByRole("button", { name: "Switch to English" }),
   ).toBeVisible();
-  await expect(page.getByRole("combobox", { name: "نمایش" })).toBeVisible();
+  await expect(page.getByRole("switch")).toBeVisible();
 });
 test("search filters destinations, support is explicitly unavailable", async ({
   page,
@@ -113,11 +104,8 @@ test("search filters destinations, support is explicitly unavailable", async ({
   await page.getByRole("textbox", { name: "جست‌وجو" }).fill("آموزش");
   await expect(page.getByRole("dialog").getByRole("link")).toHaveCount(1);
   await page.getByRole("dialog").getByRole("link").click();
-  await expect(page.getByRole("dialog")).toContainText("این مسیر به‌زودی");
-  await page.keyboard.press("Escape");
-  await expect(
-    page.getByRole("button", { name: "جست‌وجو", exact: true }),
-  ).toBeFocused();
+  await expect(page).toHaveURL(/\/education$/);
+  await page.goto("/");
   await page.getByRole("button", { name: "راهنمای آوااستار" }).click();
   await expect(page.getByRole("dialog")).toContainText(
     "گفت‌وگو یا ارسال پیام هنوز فعال نیست",
@@ -181,7 +169,9 @@ test("accessibility in both locales and themes, including overlays", async ({
     if (language === "en")
       await page.getByRole("button", { name: "Switch to English" }).click();
     for (const theme of ["dark", "light"]) {
-      await page.locator("select").selectOption(theme);
+      const toggle = page.getByRole("switch");
+      const dark = await page.locator("html").getAttribute("data-theme");
+      if ((theme === "dark") !== (dark === "dark")) await toggle.click();
       await page.emulateMedia({ reducedMotion: "reduce" });
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])

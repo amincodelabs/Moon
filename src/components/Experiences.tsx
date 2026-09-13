@@ -84,9 +84,17 @@ export function Editorial({ t, go }: { t: Copy; go: Navigate }) {
       <article className="editorial">
         <div className="editorial-image">
           <Photo name="sky" alt={t.skyAlt} />
-          <span aria-hidden="true">
-            THE NIGHT JOURNAL <span>01 —</span>
-          </span>
+          <img
+            className="editorial-wide"
+            src="/images/hero-800.webp"
+            alt=""
+            aria-hidden="true"
+            width="800"
+            height="533"
+            loading="lazy"
+            decoding="async"
+          />
+          <span aria-hidden="true">THE NIGHT JOURNAL</span>
         </div>
         <div className="editorial-copy">
           <p className="eyebrow">{t.editorialTag}</p>

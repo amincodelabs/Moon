@@ -41,8 +41,216 @@ html {
   }
 }
 
+/* Small header details keep the masthead feeling alive without competing with the hero. */
+.header-inner {
+  position: relative;
+}
+.header-inner::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 8%;
+  inset-inline-end: 8%;
+  bottom: -1px;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--gold-text) 55%, transparent),
+    transparent
+  );
+  transform: scaleX(0.2);
+  transform-origin: center;
+  animation: header-glow 7s ease-in-out infinite;
+}
+@keyframes header-glow {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scaleX(0.2);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+}
+.campaign {
+  overflow: hidden;
+}
+.campaign::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -35%;
+  width: 30%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #f4d9ad18, transparent);
+  transform: skewX(-18deg);
+  animation: campaign-sheen 8s ease-in-out infinite;
+}
+@keyframes campaign-sheen {
+  0%,
+  55% {
+    transform: translateX(0) skewX(-18deg);
+    opacity: 0;
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(470%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+.brand > img {
+  transition:
+    transform 0.55s var(--ease-out),
+    filter 0.55s ease;
+}
+.brand:focus-visible {
+  outline-offset: 8px;
+}
+.brand:is(:hover, :focus-visible) > img {
+  transform: translateY(-2px) scale(1.025);
+  filter: drop-shadow(0 5px 12px #d6b38326);
+}
+.desktop-nav a::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  bottom: 1px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-text);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.4);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s var(--ease-out);
+}
+.desktop-nav a:is(:hover, :focus-visible)::before {
+  opacity: 0.9;
+  transform: translateX(-50%) scale(1);
+}
+.header-actions .icon-button,
+.language-button,
+.preferences .theme-toggle,
+.account-button {
+  transition:
+    transform 0.3s var(--ease-out),
+    color 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .header-actions .icon-button:hover,
+  .language-button:hover,
+  .preferences .theme-toggle:hover,
+  .account-button:hover {
+    transform: translateY(-2px);
+  }
+}
+
 .hero-content {
   animation: none;
+}
+.hero-stars {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-star {
+  position: absolute;
+  left: var(--star-x);
+  top: var(--star-y);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #f9e7c7;
+  box-shadow: 0 0 10px 2px #f4d9ad80;
+  opacity: 0;
+  --star-start-x: -22vw;
+  --star-end-x: 118vw;
+  animation: star-flight var(--star-duration) linear var(--star-delay) infinite;
+}
+.hero-star::before {
+  content: "";
+  position: absolute;
+  right: 2px;
+  top: 1px;
+  width: 42px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f4d9ad66);
+  transform: rotate(-24deg);
+  transform-origin: right center;
+}
+.hero-star:nth-child(1) {
+  --star-x: 8%;
+  --star-y: 25%;
+  --star-delay: -2s;
+  --star-duration: 28s;
+}
+.hero-star:nth-child(2) {
+  --star-x: 30%;
+  --star-y: 12%;
+  --star-delay: -15s;
+  --star-duration: 36s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
+}
+.hero-star:nth-child(3) {
+  --star-x: 58%;
+  --star-y: 32%;
+  --star-delay: -23s;
+  --star-duration: 31s;
+}
+.hero-star:nth-child(4) {
+  --star-x: 82%;
+  --star-y: 18%;
+  --star-delay: -31s;
+  --star-duration: 42s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
+}
+@keyframes star-flight {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--star-start-x), 0, 0) scale(0.65);
+  }
+  12%,
+  72% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--star-end-x), -30vh, 0) scale(1.15);
+  }
+}
+@keyframes star-flight-reverse {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--star-start-x), 0, 0) scale(0.65);
+  }
+  12%,
+  72% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--star-end-x), -30vh, 0) scale(1.15);
+  }
+}
+.hero-star:nth-child(even)::before {
+  left: 2px;
+  right: auto;
+  transform: rotate(24deg);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #f4d9ad66, transparent);
 }
 .hero-content > .eyebrow {
   animation: editorial-rise 0.9s var(--ease-out) both;
@@ -168,6 +376,10 @@ html {
   vertical-align: middle;
   background: currentColor;
   transform-origin: right;
+  transition: width 0.65s var(--ease-out);
+}
+.section-heading.in-view .eyebrow:before {
+  width: 28px;
 }
 .desktop-nav a {
   position: relative;

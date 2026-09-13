@@ -32,7 +32,6 @@ export function Journey({ t, go }: { t: Copy; go: Navigate }) {
               >
                 <span className="journey-node">
                   <Icon size={26} strokeWidth={1.3} />
-                  <small>0{i + 1}</small>
                 </span>
                 <strong>{t[step.title]}</strong>
               </button>

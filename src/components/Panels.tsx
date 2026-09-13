@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Bot, Headphones, Search, Sparkles, UserRound } from "lucide-react";
 import type { Copy } from "../locales";
+import type { Language } from "../locales";
+import type { Theme } from "../preferences";
 import { destinations, type RouteKey } from "../data";
 import { Arrow, DestinationLink, Modal, type Navigate } from "./Primitives";
+import { UserDashboard } from "./UserDashboard";
 export type Panel = "search" | "account" | "menu" | "chat" | "coming" | null;
 export function Panels({
   panel,
@@ -12,6 +15,10 @@ export function Panels({
   go,
   authenticated,
   setAuthenticated,
+  language,
+  setLanguage,
+  theme,
+  setTheme,
 }: {
   panel: Panel;
   target: RouteKey;
@@ -20,6 +27,10 @@ export function Panels({
   go: Navigate;
   authenticated: boolean;
   setAuthenticated: (v: boolean) => void;
+  language: Language;
+  setLanguage: (value: Language) => void;
+  theme: Theme;
+  setTheme: (value: Theme) => void;
 }) {
   const [query, setQuery] = useState("");
   if (!panel) return null;
@@ -82,30 +93,43 @@ export function Panels({
           ))}
         </nav>
       )}
-      {panel === "account" && (
-        <div className="account-panel">
-          <span className="large-icon">
-            <UserRound size={32} />
-          </span>
-          {authenticated && <h3>{t.demoUser}</h3>}
-          <p>{t.demoAccount}</p>
-          <button
-            className="button button-gold"
-            onClick={() => {
-              setAuthenticated(!authenticated);
+      {panel === "account" &&
+        (authenticated ? (
+          <UserDashboard
+            t={t}
+            language={language}
+            theme={theme}
+            setLanguage={setLanguage}
+            setTheme={setTheme}
+            logout={() => {
+              setAuthenticated(false);
               close();
             }}
-          >
-            {authenticated ? t.logout : t.demoLogin}
-          </button>
-          {!authenticated && (
-            <DestinationLink className="text-link" go={go} route="register">
-              {t.register}
-              <Arrow />
-            </DestinationLink>
-          )}
-        </div>
-      )}
+          />
+        ) : (
+          <div className="account-panel">
+            <span className="large-icon">
+              <UserRound size={32} />
+            </span>
+            {authenticated && <h3>{t.demoUser}</h3>}
+            <p>{t.demoAccount}</p>
+            <button
+              className="button button-gold"
+              onClick={() => {
+                setAuthenticated(!authenticated);
+                close();
+              }}
+            >
+              {authenticated ? t.logout : t.demoLogin}
+            </button>
+            {!authenticated && (
+              <DestinationLink className="text-link" go={go} route="register">
+                {t.register}
+                <Arrow />
+              </DestinationLink>
+            )}
+          </div>
+        ))}
       {panel === "chat" && (
         <>
           <p>{t.chatBody}</p>

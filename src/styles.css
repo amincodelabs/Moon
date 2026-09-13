@@ -198,6 +198,114 @@ a:hover .direction-arrow {
 .icon-button:hover {
   background: var(--line);
 }
+
+.store-page {
+  min-height: calc(100vh - 160px);
+}
+.store-hero {
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  padding-block: 76px 54px;
+  position: relative;
+  overflow: hidden;
+}
+.store-hero h1 {
+  max-width: 680px;
+  margin: 0 0 16px;
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: 1.2;
+  font-weight: 600;
+}
+.store-hero p:last-child {
+  color: var(--muted);
+  max-width: 460px;
+  margin: 0;
+}
+.store-hero-orbit {
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0 0 80px color-mix(in srgb, var(--gold) 12%, transparent);
+  transform: rotate(-12deg);
+}
+.store-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.store-toolbar h2 {
+  margin: 0;
+}
+.store-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.store-cart:hover {
+  border-color: var(--gold);
+  color: var(--gold-text);
+  transform: translateY(-2px);
+}
+.store-cart b {
+  min-width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #18202c;
+  font-size: 11px;
+}
+.store-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+.store-filter {
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.store-filter:hover,
+.store-filter.is-active {
+  color: var(--text);
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.store-grid {
+  padding-top: 0;
+}
+
+@media (max-width: 700px) {
+  .store-hero {
+    min-height: 300px;
+    padding-block: 52px 34px;
+  }
+  .store-hero-orbit {
+    position: absolute;
+    inset-inline-end: -80px;
+    opacity: 0.35;
+  }
+  .store-toolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -277,6 +385,55 @@ a:hover .direction-arrow {
   gap: 10px;
   flex-shrink: 0;
 }
+.explore-page {
+  padding-block: 30px 70px;
+}
+.explore-page > nav {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.explore-page > header {
+  max-width: 800px;
+  margin-bottom: 30px;
+}
+.explore-page h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.explore-page p {
+  color: var(--muted);
+  line-height: 2;
+}
+.explore-page > img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 35vw, 430px);
+  object-fit: cover;
+  border-radius: 16px;
+}
+.explore-reading {
+  max-width: 760px;
+  margin: 40px auto 0;
+}
+.explore-reading section {
+  margin-bottom: 32px;
+}
+.explore-reading h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.explore-reading > a {
+  width: fit-content;
+}
+.explore-related {
+  display: grid;
+  gap: 14px;
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
 .brand-symbol {
   border: 1px solid #b28e5660;
   border-radius: 50%;
@@ -286,6 +443,16 @@ a:hover .direction-arrow {
   place-items: center;
   color: var(--gold-text);
   transform: rotate(-13deg);
+}
+.brand > img {
+  display: block;
+  width: 145px;
+  height: auto;
+}
+@media (max-width: 800px) {
+  .brand > img {
+    width: 112px;
+  }
 }
 .brand strong {
   display: block;
@@ -328,6 +495,79 @@ a:hover .direction-arrow {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+.preferences .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  background: transparent;
+}
+.preferences .theme-toggle:hover {
+  color: var(--gold-text);
+  border-color: var(--gold);
+}
+.preferences .theme-control {
+  position: relative;
+  width: auto;
+  gap: 2px;
+}
+.preferences .theme-control .shop-select-menu {
+  position: relative;
+  align-self: center;
+}
+.preferences .theme-control .shop-sort-control {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.preferences .theme-control .shop-select-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+  width: max-content;
+  min-width: 140px;
+  padding: 5px;
+  z-index: 60;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px #0002;
+}
+.preferences .theme-control .shop-select-options button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 6px;
+  text-align: start;
+  font-size: 12px;
+  background: transparent;
+  color: var(--text);
+}
+.preferences .theme-control .shop-select-options button:hover,
+.preferences .theme-control .shop-select-options button:focus-visible {
+  background: var(--surface2);
+  outline: 2px solid var(--gold-text);
+  outline-offset: -2px;
+}
+.preferences .theme-control .shop-select-options button[aria-selected="true"] {
+  color: var(--gold-text);
 }
 .theme-control select {
   max-width: 64px;
@@ -459,11 +699,6 @@ a:hover .direction-arrow {
 .hero-bottom p {
   margin: 0;
 }
-.sky-coordinate {
-  font: 10px monospace;
-  letter-spacing: 2px;
-  color: #8f9bad;
-}
 .destinations {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -510,13 +745,8 @@ a:hover .direction-arrow {
 }
 .destination-top {
   display: flex;
-  justify-content: space-between;
   padding: 24px;
   color: #e1c49d;
-}
-.destination-top span {
-  font: 11px monospace;
-  color: #b6c1d0;
 }
 .destination-copy {
   position: absolute;
@@ -916,14 +1146,6 @@ a:hover .direction-arrow {
     background 0.2s,
     color 0.2s,
     box-shadow 0.2s;
-}
-.journey-node small {
-  position: absolute;
-  bottom: -5px;
-  inset-inline-end: -3px;
-  font: 10px monospace;
-  background: var(--bg);
-  padding: 4px 6px;
 }
 .journey-path strong {
   font-size: 14px;
@@ -1598,10 +1820,6 @@ a:hover .direction-arrow {
     bottom: 27px;
     font-size: 9px;
   }
-  .sky-coordinate {
-    font-size: 8px;
-    letter-spacing: 1px;
-  }
   .hero-orbit {
     display: none;
   }
@@ -1644,9 +1862,6 @@ a:hover .direction-arrow {
   }
   .destination-top svg {
     width: 21px;
-  }
-  .destination-top span {
-    font-size: 9px;
   }
   .destination-copy {
     inset-inline: 15px;
@@ -1751,9 +1966,6 @@ a:hover .direction-arrow {
   }
   .journey-node > svg {
     width: 21px;
-  }
-  .journey-node small {
-    font-size: 8px;
   }
   .journey-path:before {
     top: 27px;

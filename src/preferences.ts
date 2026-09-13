@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { transitionPreference } from "./preferenceTransition";
 import { locales, type Language } from "./locales";
 export type Theme = "dark" | "light" | "system";
 export function readPreference(key: string, fallback: string) {
@@ -20,10 +21,10 @@ export function usePreferences() {
     readPreference("avastar-language", "fa") === "en" ? "en" : "fa",
   );
   const [theme, setTheme] = useState<Theme>(() => {
-    const v = readPreference("avastar-theme", "dark");
+    const v = readPreference("avastar-theme", "system");
     return v === "light" || v === "system" ? v : "dark";
   });
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === "fa" ? "rtl" : "ltr";
     savePreference("avastar-language", language);
@@ -35,7 +36,7 @@ export function usePreferences() {
     ])
       document.querySelector(selector)?.setAttribute("content", value);
   }, [language]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     savePreference("avastar-theme", theme);
     const media = matchMedia("(prefers-color-scheme: dark)");
     const apply = () => {
@@ -50,5 +51,12 @@ export function usePreferences() {
     media.addEventListener("change", apply);
     return () => media.removeEventListener("change", apply);
   }, [theme]);
-  return { language, setLanguage, theme, setTheme, t: locales[language] };
+  return {
+    language,
+    setLanguage: (next: Language) =>
+      transitionPreference(() => setLanguage(next)),
+    theme,
+    setTheme: (next: Theme) => transitionPreference(() => setTheme(next)),
+    t: locales[language],
+  };
 }
