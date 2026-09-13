@@ -172,6 +172,8 @@ html {
   background: #f9e7c7;
   box-shadow: 0 0 10px 2px #f4d9ad80;
   opacity: 0;
+  --star-start-x: -22vw;
+  --star-end-x: 118vw;
   animation: star-flight var(--star-duration) linear var(--star-delay) infinite;
 }
 .hero-star::before {
@@ -196,6 +198,9 @@ html {
   --star-y: 12%;
   --star-delay: -8s;
   --star-duration: 26s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
 }
 .hero-star:nth-child(3) {
   --star-x: 58%;
@@ -208,6 +213,9 @@ html {
   --star-y: 18%;
   --star-delay: -5s;
   --star-duration: 28s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
 }
 .hero-star:nth-child(5) {
   --star-x: 18%;
@@ -220,6 +228,9 @@ html {
   --star-y: 38%;
   --star-delay: -10s;
   --star-duration: 24s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
 }
 .hero-star:nth-child(7) {
   --star-x: 72%;
@@ -232,11 +243,14 @@ html {
   --star-y: 32%;
   --star-delay: -16s;
   --star-duration: 26s;
+  --star-start-x: 22vw;
+  --star-end-x: -118vw;
+  animation-name: star-flight-reverse;
 }
 @keyframes star-flight {
   0% {
     opacity: 0;
-    transform: translate3d(0, 10vh, 0) scale(0.65);
+    transform: translate3d(var(--star-start-x), 0, 0) scale(0.65);
   }
   12%,
   72% {
@@ -244,8 +258,29 @@ html {
   }
   100% {
     opacity: 0;
-    transform: translate3d(12vw, -30vh, 0) scale(1.15);
+    transform: translate3d(var(--star-end-x), -30vh, 0) scale(1.15);
   }
+}
+@keyframes star-flight-reverse {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--star-start-x), 0, 0) scale(0.65);
+  }
+  12%,
+  72% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--star-end-x), -30vh, 0) scale(1.15);
+  }
+}
+.hero-star:nth-child(even)::before {
+  left: 2px;
+  right: auto;
+  transform: rotate(24deg);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #f4d9ad66, transparent);
 }
 .hero-content > .eyebrow {
   animation: editorial-rise 0.9s var(--ease-out) both;
