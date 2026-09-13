@@ -27,6 +27,7 @@ import {
   AddButton,
   Empty,
 } from "./ui";
+import { siteAsset, sitePath } from "../site";
 
 export function Catalog() {
   const { tr, text, money, navigate, path, searchQuery, setSearchQuery } =
@@ -119,7 +120,7 @@ export function Catalog() {
           )}
           <img
             key={bannerSlides[banner].image}
-            src={`/images/${bannerSlides[banner].image}-800.webp`}
+            src={siteAsset(`/images/${bannerSlides[banner].image}-800.webp`)}
             alt=""
             width="800"
             height="600"
@@ -491,9 +492,13 @@ export function RelatedContent() {
           tr("Magazine", "مجله"),
         ],
       ].map(([route, img, title, label]) => (
-        <a className="shop-content-card" href={`/${route}`} key={route}>
+        <a
+          className="shop-content-card"
+          href={sitePath(`/${route}`)}
+          key={route}
+        >
           <img
-            src={`/images/${img}-400.webp`}
+            src={siteAsset(`/images/${img}-400.webp`)}
             width="400"
             height="300"
             loading="lazy"

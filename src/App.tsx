@@ -10,14 +10,16 @@ import { Journey, Footer } from "./components/JourneyFooter";
 import { Panels, type Panel } from "./components/Panels";
 import { useLandingMotion } from "./useLandingMotion";
 import { ExplorePage, explorePages } from "./components/ExplorePage";
+import { appPath, sitePath } from "./site";
 export default function App() {
   const preferences = usePreferences();
   const { t, language } = preferences;
-  const isStore = location.pathname === routes.store;
-  const contentKey = location.pathname.slice(1) as keyof typeof explorePages;
+  const pathname = appPath();
+  const isStore = pathname === routes.store;
+  const contentKey = pathname.slice(1) as keyof typeof explorePages;
   const contentPage = Object.hasOwn(explorePages, contentKey);
   const initialRoute = (Object.entries(routes) as [RouteKey, string][]).find(
-    ([, path]) => location.pathname === path,
+    ([, path]) => pathname === path,
   )?.[0];
   const [panel, setPanel] = useState<Panel>(
     initialRoute && !isStore && !contentPage ? "coming" : null,
@@ -41,7 +43,7 @@ export default function App() {
   const opener = useRef<HTMLElement | null>(null);
   const openPanel = (next: Panel) => {
     if (next === "account") {
-      location.assign("/store/account");
+      location.assign(sitePath("/store/account"));
       return;
     }
     if (!panel) opener.current = document.activeElement as HTMLElement;
@@ -56,7 +58,7 @@ export default function App() {
   };
   const go = (route: RouteKey) => {
     if (route === "store" || Object.hasOwn(explorePages, route)) {
-      window.location.assign(routes[route]);
+      window.location.assign(sitePath(routes[route]));
       return;
     }
     setTarget(route);

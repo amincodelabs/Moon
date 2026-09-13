@@ -7,6 +7,7 @@ import {
   SectionHeading,
   type Navigate,
 } from "./Primitives";
+import { siteAsset } from "../site";
 export function Experiences({ t, go }: { t: Copy; go: Navigate }) {
   return (
     <section className="section container">
@@ -86,7 +87,7 @@ export function Editorial({ t, go }: { t: Copy; go: Navigate }) {
           <Photo name="sky" alt={t.skyAlt} />
           <img
             className="editorial-wide"
-            src="/images/hero-800.webp"
+            src={siteAsset("/images/hero-800.webp")}
             alt=""
             aria-hidden="true"
             width="800"

@@ -4,10 +4,16 @@ import type { Copy, Language } from "../locales";
 import type { Theme } from "../preferences";
 import { destinations } from "../data";
 import { DestinationLink, type Navigate } from "./Primitives";
+import { siteAsset, sitePath } from "../site";
 export function Brand({ t }: { t: Copy }) {
   return (
-    <a href="/" className="brand" aria-label={t.brand}>
-      <img src="/avastar-logo.svg" alt={t.brand} width="200" height="84" />
+    <a href={sitePath("/")} className="brand" aria-label={t.brand}>
+      <img
+        src={siteAsset("/avastar-logo.svg")}
+        alt={t.brand}
+        width="200"
+        height="84"
+      />
     </a>
   );
 }
