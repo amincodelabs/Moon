@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /AVA-Star/
+          VITE_BASE: /Moon/
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html && touch dist/.nojekyll
       - name: Configure Pages
