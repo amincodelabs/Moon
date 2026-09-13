@@ -94,9 +94,7 @@ export function Editorial({ t, go }: { t: Copy; go: Navigate }) {
             loading="lazy"
             decoding="async"
           />
-          <span aria-hidden="true">
-            THE NIGHT JOURNAL <span>01 —</span>
-          </span>
+          <span aria-hidden="true">THE NIGHT JOURNAL</span>
         </div>
         <div className="editorial-copy">
           <p className="eyebrow">{t.editorialTag}</p>

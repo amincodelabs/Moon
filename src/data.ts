@@ -26,7 +26,6 @@ export const destinations: {
   action: CopyKey;
   image: string;
   alt: CopyKey;
-  number: string;
 }[] = [
   {
     id: "store",
@@ -35,7 +34,6 @@ export const destinations: {
     action: "storeAction",
     image: "telescope",
     alt: "telescopeAlt",
-    number: "01",
   },
   {
     id: "education",
@@ -44,7 +42,6 @@ export const destinations: {
     action: "educationAction",
     image: "sky",
     alt: "skyAlt",
-    number: "02",
   },
   {
     id: "tours",
@@ -53,7 +50,6 @@ export const destinations: {
     action: "toursAction",
     image: "tour",
     alt: "tourAlt",
-    number: "03",
   },
   {
     id: "magazine",
@@ -62,7 +58,6 @@ export const destinations: {
     action: "magazineAction",
     image: "galaxy",
     alt: "galaxyAlt",
-    number: "04",
   },
 ];
 export const products: {

@@ -750,13 +750,8 @@ a:hover .direction-arrow {
 }
 .destination-top {
   display: flex;
-  justify-content: space-between;
   padding: 24px;
   color: #e1c49d;
-}
-.destination-top span {
-  font: 11px monospace;
-  color: #b6c1d0;
 }
 .destination-copy {
   position: absolute;
@@ -1884,9 +1879,6 @@ a:hover .direction-arrow {
   }
   .destination-top svg {
     width: 21px;
-  }
-  .destination-top span {
-    font-size: 9px;
   }
   .destination-copy {
     inset-inline: 15px;

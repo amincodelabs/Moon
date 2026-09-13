@@ -81,7 +81,7 @@ export function Hero({ t, go }: { t: Copy; go: Navigate }) {
           </a>
           <p>{t.heroCaption}</p>
           <span className="sky-coordinate" aria-hidden="true">
-            AVASTAR &nbsp; / &nbsp; 01
+            AVASTAR
           </span>
         </div>
       </section>
@@ -108,7 +108,6 @@ export function Discovery({ t, go }: { t: Copy; go: Navigate }) {
               <div className="destination-shade" />
               <div className="destination-top">
                 <Icon size={25} strokeWidth={1.3} />
-                <span>{d.number}</span>
               </div>
               <div className="destination-copy">
                 <h3>{t[d.name]}</h3>
