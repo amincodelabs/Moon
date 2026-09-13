@@ -18,7 +18,7 @@ export function Hero({ t, go }: { t: Copy; go: Navigate }) {
         </div>
         <div className="hero-shade" />
         <div className="hero-stars" aria-hidden="true">
-          {Array.from({ length: 8 }, (_, i) => (
+          {Array.from({ length: 4 }, (_, i) => (
             <i key={i} className="hero-star" />
           ))}
         </div>
@@ -85,9 +85,6 @@ export function Hero({ t, go }: { t: Copy; go: Navigate }) {
             {t.scroll}
           </a>
           <p>{t.heroCaption}</p>
-          <span className="sky-coordinate" aria-hidden="true">
-            AVASTAR
-          </span>
         </div>
       </section>
     </div>
