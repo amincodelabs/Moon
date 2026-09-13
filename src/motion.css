@@ -189,49 +189,49 @@ html {
   --star-x: 8%;
   --star-y: 25%;
   --star-delay: -1s;
-  --star-duration: 9s;
+  --star-duration: 20s;
 }
 .hero-star:nth-child(2) {
   --star-x: 30%;
   --star-y: 12%;
-  --star-delay: -6s;
-  --star-duration: 12s;
+  --star-delay: -8s;
+  --star-duration: 26s;
 }
 .hero-star:nth-child(3) {
   --star-x: 58%;
   --star-y: 32%;
-  --star-delay: -9s;
-  --star-duration: 10s;
+  --star-delay: -14s;
+  --star-duration: 22s;
 }
 .hero-star:nth-child(4) {
   --star-x: 82%;
   --star-y: 18%;
-  --star-delay: -4s;
-  --star-duration: 13s;
+  --star-delay: -5s;
+  --star-duration: 28s;
 }
 .hero-star:nth-child(5) {
   --star-x: 18%;
   --star-y: 65%;
-  --star-delay: -11s;
-  --star-duration: 14s;
+  --star-delay: -19s;
+  --star-duration: 30s;
 }
 .hero-star:nth-child(6) {
   --star-x: 48%;
   --star-y: 76%;
-  --star-delay: -3s;
-  --star-duration: 11s;
+  --star-delay: -10s;
+  --star-duration: 24s;
 }
 .hero-star:nth-child(7) {
   --star-x: 72%;
   --star-y: 58%;
-  --star-delay: -7s;
-  --star-duration: 15s;
+  --star-delay: -24s;
+  --star-duration: 32s;
 }
 .hero-star:nth-child(8) {
   --star-x: 92%;
   --star-y: 82%;
-  --star-delay: -13s;
-  --star-duration: 12s;
+  --star-delay: -16s;
+  --star-duration: 26s;
 }
 @keyframes star-flight {
   0% {
